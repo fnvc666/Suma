@@ -14,7 +14,7 @@
 		4AE52A782E5B665900E0AC4B /* Exceptions for "Suma" folder in "Suma" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 4AE52A622E5B665700E0AC4B /* Suma */;
 		};
