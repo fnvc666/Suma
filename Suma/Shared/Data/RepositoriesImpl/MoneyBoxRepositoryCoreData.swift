@@ -5,6 +5,7 @@
 //  Created by Pavel Pavel on 25/08/2025.
 //
 import Foundation
+import CoreData
 
 final class MoneyBoxRepositoryCoreData: MoneyBoxRepositoryProtocol {
     private let container: NSPersistentContainer
