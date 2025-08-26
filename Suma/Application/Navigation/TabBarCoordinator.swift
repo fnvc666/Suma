@@ -7,7 +7,7 @@
 import UIKit
 
 final class TabBarCoordinator: Coordinator {
-    var children: [any Coordinator] = []
+    var children: [Coordinator] = []
     private let container: AppContainer
     
     let root = UITabBarController()
@@ -22,17 +22,16 @@ final class TabBarCoordinator: Coordinator {
         let finNav = UINavigationController()
         let savNav = UINavigationController()
         
-        let homeVC = UIViewController(); homeVC.view.backgroundColor = .red;
-        let finVC = UIViewController(); finVC.view.backgroundColor = .blue;
-        let savVC = UIViewController(); savVC.view.backgroundColor = .green;
+        let home = HomeCoordinator(container: container, nav: homeNav)
+        let fin = FinanceCoordinator(container: container, nav: finNav)
+        let sav = SavingsCoordinator(container: container, nav: savNav)
         
-        homeNav.setViewControllers([homeVC], animated: false)
-        finNav.setViewControllers([finVC], animated: false)
-        savNav.setViewControllers([savVC], animated: false)
+        children = [home, fin, sav]
+        children.forEach { $0.start() }
         
         homeNav.tabBarItem = .init(title: "Home", image: UIImage(systemName: "house"), tag: 0)
         finNav.tabBarItem = .init(title: "Finances", image: UIImage(systemName: "barometer"), tag: 1)
-        savVC.tabBarItem = .init(title: "Savings", image: UIImage(systemName: "wallet"), tag: 2)
+        savNav.tabBarItem = .init(title: "Savings", image: UIImage(systemName: "wallet"), tag: 2)
         
         root.setViewControllers([homeNav, finNav, savNav], animated: false)
     }
