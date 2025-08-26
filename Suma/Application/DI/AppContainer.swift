@@ -25,11 +25,8 @@ final class AppContainer {
         
         // Repositories (CoreData impl)
         let cd = persistent
-        transactionRepo = TransactionsRepository()
-        categoriesRepo = CategoriesRepository()
-        moneyBoxRepo = MoneyBoxRepository()
-//        transactionRepo = TransactionsRepositoryCoreData(container: cd)
-//        categoriesRepo = CategoriesRepositoryCoreData(container: cd)
-//        moneyBoxRepo = moneyBoxReportRepositoryCoreData(container: cd)
+        transactionRepo = TransactionsRepositoryCoreData(container: persistent)
+        categoriesRepo = CategoriesRepositoryCoreData(container: persistent)
+        moneyBoxRepo = MoneyBoxRepositoryCoreData(container: persistent)
     }
 }

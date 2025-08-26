@@ -6,7 +6,13 @@
 //
 import Foundation
 
-final class MoneyBoxRepository: MoneyBoxRepositoryProtocol {
+final class MoneyBoxRepositoryCoreData: MoneyBoxRepositoryProtocol {
+    private let container: NSPersistentContainer
+    
+    init(container: NSPersistentContainer) {
+        self.container = container
+    }
+    
     private var items: [MoneyBox] = []
     
     func listAll() throws -> [MoneyBox] {
