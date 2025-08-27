@@ -24,5 +24,4 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
         items.append(tx)
     }
     
-    
 }

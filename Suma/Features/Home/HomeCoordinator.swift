@@ -17,9 +17,23 @@ final class HomeCoordinator: Coordinator {
     }
     
     func start() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemBackground
+        let vm = HomeViewModel(transactions: container.transactionRepo)
+        let vc = HomeViewController(viewModel: vm)
         vc.title = "Home"
         nav.setViewControllers([vc], animated: false)
+        
+        vm.onSettingsRequested = { [weak self] in
+            self?.startSettings()
+        }
+    }
+    
+    private func startSettings() {
+        let flow = SettingsCoordinator(nav: nav)
+        children.append(flow)
+        flow.onFinish = { [weak self, weak flow] in
+            guard let flow else { return }
+            self?.children.removeAll { $0 === flow}
+        }
+        flow.start()
     }
 }
