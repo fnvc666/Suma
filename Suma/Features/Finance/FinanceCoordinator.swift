@@ -17,11 +17,36 @@ final class FinanceCoordinator: Coordinator {
     }
     
     func start() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemBackground
+        let vm = FinanceViewModel(categories: container.categoriesRepo, transactions: container.transactionRepo)
+        let vc = FinanceViewController(vm: vm)
         vc.title = "Finance"
         nav.setViewControllers([vc], animated: false)
+        
+        vm.onAddCategory = { [weak self] in
+            self?.startAddCategory()
+        }
+        
+        vm.onOpenCategory = { [weak self] categoryId in
+            self?.startCategory(categoryId: categoryId)
+        }
+        
+        
     }
     
+    private func startAddCategory() {
+        let vm = AddCategoryViewModel(categories: container.categoriesRepo)
+        let vc = AddCategoryViewController(viewModel: vm)
+        nav.pushViewController(vc, animated: true)
+    }
     
+    private func startCategory(categoryId: UUID) {
+        let flow = CategoryCoordinator(container: container, nav: nav, categoryId: categoryId)
+        
+        children.append(flow)
+        flow.onFinish = { [weak self, weak flow] in
+            guard let self, let flow else { return }
+            self.children.removeAll { $0 === flow }
+        }
+        flow.start()
+    }
 }
