@@ -12,4 +12,14 @@ final class AddCategoryViewModel {
     init(categories: CategoriesRepositoryProtocol) {
         self.categories = categories
     }
+    
+    // Outside navigation
+    var onClose: (() -> Void)?
+    var onSaved: (() -> Void)?
+    
+    // Inputs <- View
+    func viewDidLoad() {}
+    
+    func closeTapped() { onClose?() }
+    func saveTapped() { onSaved?() }
 }
