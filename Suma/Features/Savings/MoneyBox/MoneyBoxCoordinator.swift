@@ -41,6 +41,7 @@ final class MoneyBoxCoordinator: Coordinator {
         vm.onEditMoney = { [weak self] in
             self?.startBoxTransactionCoordinator(mode: .edit)
         }
+        nav.pushViewController(vc, animated: true)
     }
     
     private func startEditBox() {
@@ -63,5 +64,6 @@ final class MoneyBoxCoordinator: Coordinator {
             guard let self, let flow else { return }
             self.children.removeAll { $0 === flow }
         }
+        flow.start()
     }
 }

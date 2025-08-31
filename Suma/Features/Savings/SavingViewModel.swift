@@ -20,5 +20,5 @@ final class SavingViewModel {
     // Inputs <- View
     func viewDidLoad() {}
     func addMoneyBoxTapped() { onAddMoneyBox?() }
-    func moneyBoxTapped(id: UUID) { onAddMoneyBox?() }
+    func moneyBoxTapped(id: UUID) { onOpenMoneyBox?(UUID()) }
 }

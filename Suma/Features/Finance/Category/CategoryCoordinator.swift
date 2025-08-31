@@ -48,6 +48,8 @@ final class CategoryCoordinator: Coordinator {
         vm.onEditTransaction = { [weak self] txId in
             self?.startEditTransaction(id: txId)
         }
+        
+        nav.pushViewController(vc, animated: true)
     }
     
     private func startEditCategory() {
