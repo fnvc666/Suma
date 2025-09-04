@@ -29,7 +29,6 @@ final class GradientBackgroundView: UIView {
         ]
         glow.locations = [0.0, 0.35, 1.0] as [NSNumber]
 
-        // Поднимаем центр градиента выше
         glow.startPoint = CGPoint(x: 0.5, y: 0.3)
         glow.endPoint = CGPoint(x: 1.9, y: 0.7)
 
