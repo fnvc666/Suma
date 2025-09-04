@@ -40,6 +40,7 @@ final class RootTabViewController: UITabBarController {
         let bar = TabBarContainer(selection: selection, items: items)
         
         let hc = UIHostingController(rootView: bar)
+        hc.view.backgroundColor = .clear
         hosting = hc
         
         addChild(hc)
