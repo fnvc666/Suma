@@ -5,7 +5,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Geist-Medium.ttf</string>
-		<string>GeistMono-Regular.ttf</string>
+		<string>Geist-Regular.ttf</string>
+		<string>Geist-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

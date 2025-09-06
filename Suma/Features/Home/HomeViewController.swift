@@ -35,7 +35,7 @@ final class HomeViewController: UIViewController {
         content.addSubview(stack)
         
         stack.axis = .vertical
-        stack.spacing = 0
+        stack.spacing = 24
         stack.isLayoutMarginsRelativeArrangement = true
         stack.directionalLayoutMargins = .init(top: 0, leading: 20, bottom: 10, trailing: 20)
         
@@ -77,9 +77,13 @@ final class HomeViewController: UIViewController {
             self?.vm.settingsTapped()
         }
         
-        [header].forEach {
+        let totalBalance = TotalBalanceView()
+        
+        [header, totalBalance].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
+        
+        stack.setCustomSpacing(40, after: header)
     }
 }
