@@ -12,7 +12,6 @@ final class HomeViewController: UIViewController {
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
-    private let content = UIView()
     private let stack = UIStackView()
     
     init(viewModel: HomeViewModel) {
@@ -31,8 +30,7 @@ final class HomeViewController: UIViewController {
     private func layout() {
         view.addSubview(background)
         view.addSubview(scroll)
-        scroll.addSubview(content)
-        content.addSubview(stack)
+        scroll.addSubview(stack)
         
         stack.axis = .vertical
         stack.spacing = 24
@@ -40,9 +38,13 @@ final class HomeViewController: UIViewController {
         stack.directionalLayoutMargins = .init(top: 0, leading: 20, bottom: 10, trailing: 20)
         
         
-        [background, scroll, content, stack].forEach {
+        [background, scroll, stack].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
+        
+        scroll.alwaysBounceVertical = true
+        scroll.showsVerticalScrollIndicator = false
+        scroll.isDirectionalLockEnabled = true
         
         NSLayoutConstraint.activate([
             background.topAnchor.constraint(equalTo: view.topAnchor),
@@ -55,22 +57,20 @@ final class HomeViewController: UIViewController {
             scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            content.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor),
-            content.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor),
-            content.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor),
-            content.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
+            stack.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor),
+            stack.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
             
-            content.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor),
-            
-            stack.topAnchor.constraint(equalTo: content.topAnchor),
-            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: content.bottomAnchor),
+            stack.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor)
         ])
     }
     
     private func buildComponents() {
-        stack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        stack.arrangedSubviews.forEach {
+            stack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
         
         let header = MainHeaderView()
         header.onSettingsTap = { [weak self] in

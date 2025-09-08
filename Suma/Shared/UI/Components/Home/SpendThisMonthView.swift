@@ -11,19 +11,34 @@ final class SpendThisMonthView: UIView {
     private let vstack = UIStackView()
     
     private let headerHstack = UIStackView()
-    private let headerVStack = UIStackView()
-    
     private let columnsHstack = UIStackView()
     
     private let spentMonthLabel = UILabel()
     private let monthDates = UILabel()
-    private let columns: [Column] = [
-        .init(category: "Rent", amount: "200", maximum: 10, current: 3),
-        .init(category: "Food", amount: "300", maximum: 10, current: 4),
-        .init(category: "Sports", amount: "400", maximum: 10, current: 5),
-        .init(category: "Shops", amount: "500", maximum: 10, current: 6),
-        .init(category: "Savings", amount: "600", maximum: 10, current: 7),
+    private let augustColumns: [Column] = [
+        .init(category: "Rent", amount: "300", maximum: 10, current: 3),
+        .init(category: "Food", amount: "400", maximum: 10, current: 4),
+        .init(category: "Sports", amount: "500", maximum: 10, current: 5),
+        .init(category: "Shops", amount: "600", maximum: 10, current: 6),
+        .init(category: "Savings", amount: "700", maximum: 10, current: 7),
     ]
+    private let septemberColumns: [Column] = [
+        .init(category: "Rent", amount: "600", maximum: 10, current: 6),
+        .init(category: "Food", amount: "300", maximum: 10, current: 3),
+        .init(category: "Sports", amount: "500", maximum: 10, current: 5),
+        .init(category: "Shops", amount: "500", maximum: 10, current: 5),
+        .init(category: "Savings", amount: "100", maximum: 10, current: 1),
+    ]
+    private let emptyColumns: [Column] = [
+        .init(category: "Rent", amount: "0", maximum: 10, current: 0),
+        .init(category: "Food", amount: "0", maximum: 10, current: 0),
+        .init(category: "Sports", amount: "0", maximum: 10, current: 0),
+        .init(category: "Shops", amount: "0", maximum: 10, current: 0),
+        .init(category: "Savings", amount: "0", maximum: 10, current: 0),
+    ]
+    private lazy var monthsSpend: [String : [Column]] = ["August": augustColumns, "September": septemberColumns]
+    private lazy var currentMonthName: String = monthName(for: currentMonthNumber())
+    private lazy var currentMonth: [Column] = monthsSpend[currentMonthName] ?? emptyColumns
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,9 +48,6 @@ final class SpendThisMonthView: UIView {
     required init?(coder: NSCoder) { fatalError() }
     
     private func setupUI() {
-        print("Setup UI for SpendThisMonthView")
-        print("Screen bounds: \(UIScreen.main.bounds)")
-        print("View frame: \(frame)")
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 16
         layer.masksToBounds = true
@@ -44,16 +56,14 @@ final class SpendThisMonthView: UIView {
         bg.contentMode = .scaleAspectFill
         
         vstack.axis = .vertical
-        vstack.spacing = 20
+        vstack.spacing = 0
         vstack.isLayoutMarginsRelativeArrangement = true
         vstack.directionalLayoutMargins = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
         addSubview(vstack)
         
         // MARK: - Header
         headerHstack.axis = .horizontal
-        
-        headerVStack.axis = .vertical
-        headerVStack.spacing = 6
+        headerHstack.alignment = .center
         
         spentMonthLabel.text = "Spent this month"
         spentMonthLabel.font = UIFont(name: "Geist-Medium", size: 18)
@@ -63,8 +73,28 @@ final class SpendThisMonthView: UIView {
         monthDates.font = UIFont(name: "Geist-Regular", size: 14)
         monthDates.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         
-        headerVStack.addArrangedSubview(spentMonthLabel)
-        headerVStack.addArrangedSubview(monthDates)
+        let initial = currentMonthNumber()
+        let pickerButton = MonthPickerButtonView(initialMonthIndex: initial, frame: .zero) { [weak self] month in
+            guard let self else { return }
+            let data = monthsSpend[month] ?? {
+                self.monthsSpend[month] = self.emptyColumns
+                return self.emptyColumns
+            }()
+            
+            currentMonthName = month
+            currentMonth = data
+            monthDates.text = self.makeDatesLabel(for: month)
+            reloadColumns(with: data)
+        }
+        pickerButton.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        pickerButton.widthAnchor.constraint(equalToConstant: 117).isActive = true
+        pickerButton.layer.cornerRadius = 8
+        pickerButton.layer.borderWidth = 1
+        pickerButton.layer.masksToBounds = true
+        pickerButton.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).cgColor
+        
+        headerHstack.addArrangedSubview(spentMonthLabel)
+        headerHstack.addArrangedSubview(pickerButton)
         
         // MARK: - Columns
         columnsHstack.axis = .horizontal
@@ -72,15 +102,11 @@ final class SpendThisMonthView: UIView {
         columnsHstack.directionalLayoutMargins = .init(top: 18, leading: 0, bottom: 0, trailing: 0)
         columnsHstack.distribution = .equalSpacing
         
-        for col in columns {
-            let colView = ColumnView(frame: .zero, column: col)
-            colView.widthAnchor.constraint(equalToConstant: 55).isActive = true
-            columnsHstack.addArrangedSubview(colView)
-        }
-        
-        vstack.addArrangedSubview(headerVStack)
+        vstack.addArrangedSubview(headerHstack)
+        vstack.addArrangedSubview(monthDates)
         vstack.addArrangedSubview(columnsHstack)
         
+        vstack.setCustomSpacing(30, after: monthDates)
         [bg, vstack].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -91,87 +117,63 @@ final class SpendThisMonthView: UIView {
             bg.trailingAnchor.constraint(equalTo: trailingAnchor),
             bg.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            bg.heightAnchor.constraint(equalToConstant: 350),
+            bg.heightAnchor.constraint(equalToConstant: 370),
             
             vstack.topAnchor.constraint(equalTo: topAnchor),
             vstack.leadingAnchor.constraint(equalTo: leadingAnchor),
             vstack.trailingAnchor.constraint(equalTo: trailingAnchor),
             vstack.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-    }
-}
-
-// temp
-struct Column {
-    let category: String
-    let amount: String
-    let maximum: Int
-    let current: Int
-}
-
-final class ColumnView: UIView {
-    private let column: Column
-    private let vstack = UIStackView()
-    private let maxColumnLabel = UILabel()
-    private let fillColumnLabel = UILabel()
-    private let categoryLabel = UILabel()
-    private let amountLabel = UILabel()
-    
-    init(frame: CGRect, column: Column) {
-        self.column = column
-        super.init(frame: frame)
-        setupUI()
+        
+        reloadColumns(with: augustColumns)
     }
     
-    private func setupUI() {
-        addSubview(vstack)
-        vstack.axis = .vertical
-        vstack.alignment = .center
-        vstack.spacing = 5
-        vstack.translatesAutoresizingMaskIntoConstraints = false
+    private func reloadColumns(with data: [Column]) {
+        columnsHstack.arrangedSubviews.forEach { sub in
+            columnsHstack.removeArrangedSubview(sub)
+            sub.removeFromSuperview()
+        }
         
-        maxColumnLabel.backgroundColor = UIColor(red: 0.871, green: 0.859, blue: 0.8, alpha: 0.2)
-        maxColumnLabel.layer.cornerRadius = 9
-        maxColumnLabel.layer.masksToBounds = true
-        maxColumnLabel.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        maxColumnLabel.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        
-        fillColumnLabel.backgroundColor = UIColor(red: 0.949, green: 1, blue: 0.345, alpha: 1)
-        fillColumnLabel.layer.cornerRadius = 9
-        fillColumnLabel.layer.masksToBounds = true
-        let cur = CGFloat(column.current) / CGFloat(column.maximum) * 160
-        fillColumnLabel.heightAnchor.constraint(equalToConstant: cur).isActive = true
-        fillColumnLabel.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        fillColumnLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        categoryLabel.text = column.category
-        categoryLabel.textColor = UIColor(red: 0.979, green: 0.979, blue: 0.979, alpha: 0.6)
-        categoryLabel.font = UIFont(name: "Geist-Regular", size: 12)
-        
-        amountLabel.text = "\(column.amount)$"
-        amountLabel.textColor = UIColor(red: 0.979, green: 0.979, blue: 0.979, alpha: 1)
-        amountLabel.font = UIFont(name: "Geist-Semibold", size: 12)
-        
-        maxColumnLabel.addSubview(fillColumnLabel)
-        vstack.addArrangedSubview(maxColumnLabel)
-        vstack.addArrangedSubview(categoryLabel)
-        vstack.addArrangedSubview(amountLabel)
-        
-        vstack.setCustomSpacing(26, after: maxColumnLabel)
-        
-        NSLayoutConstraint.activate([
-            vstack.topAnchor.constraint(equalTo: topAnchor),
-            vstack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            vstack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            vstack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            fillColumnLabel.leadingAnchor.constraint(equalTo: maxColumnLabel.leadingAnchor),
-            fillColumnLabel.trailingAnchor.constraint(equalTo: maxColumnLabel.trailingAnchor),
-            fillColumnLabel.bottomAnchor.constraint(equalTo: maxColumnLabel.bottomAnchor),
-        ])
+        for mon in data {
+            let colView = ColumnView(frame: .zero, column: mon)
+            colView.widthAnchor.constraint(equalToConstant: 55).isActive = true
+            columnsHstack.addArrangedSubview(colView)
+        }
     }
     
-    required init?(coder: NSCoder) { fatalError() }
+    // MARK: - Helpers
+    private func currentMonthNumber() -> Int {
+        Calendar.current.component(.month, from: Date())
+    }
     
-   
+    private func monthName(for number: Int) -> String {
+        var df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        let idx = max(1, min(12, number)) - 1
+        return df.monthSymbols[idx]
+    }
+    
+    private func monthNumber(from name: String) -> Int {
+        let map: [String: Int] = [
+            "January": 1, "February": 2, "March": 3, "April": 4,
+            "May": 5, "June": 6, "July": 7, "August": 8,
+            "September": 9, "October": 10, "November": 11, "December": 12
+        ]
+        return map[name] ?? currentMonthNumber()
+    }
+    
+    private func makeDatesLabel(for monthName: String) -> String {
+        let cal = Calendar.current
+        let year = cal.component(.year, from: Date())
+        let month = monthNumber(from: monthName)
+        
+        var comps = DateComponents()
+        comps.year = year
+        comps.month = month
+        comps.day = 1
+        
+        let date = cal.date(from: comps) ?? Date()
+        let days = cal.range(of: .day, in: .month, for: date)?.count ?? 30
+        return "1 - \(days) \(monthName)"
+    }
 }
