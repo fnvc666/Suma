@@ -19,7 +19,6 @@ final class HomeCoordinator: Coordinator {
     func start() {
         let vm = HomeViewModel(transactions: container.transactionRepo)
         let vc = HomeViewController(viewModel: vm)
-        vc.title = "Home"
         nav.setViewControllers([vc], animated: false)
         
         vm.onSettingsRequested = { [weak self] in
