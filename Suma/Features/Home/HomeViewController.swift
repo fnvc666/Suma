@@ -79,8 +79,9 @@ final class HomeViewController: UIViewController {
         
         let totalBalance = TotalBalanceView()
         let spentThisMonth = SpendThisMonthView()
+        let budgetHistory = BudgetHistoryView()
         
-        [header, totalBalance, spentThisMonth].forEach {
+        [header, totalBalance, spentThisMonth, budgetHistory].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
