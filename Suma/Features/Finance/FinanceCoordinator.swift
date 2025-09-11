@@ -18,8 +18,7 @@ final class FinanceCoordinator: Coordinator {
     
     func start() {
         let vm = FinanceViewModel(categories: container.categoriesRepo, transactions: container.transactionRepo)
-        let vc = FinanceViewController(vm: vm)
-        vc.title = "Finance"
+        let vc = FinanceViewController(viewModel: vm)
         nav.setViewControllers([vc], animated: false)
         
         vm.onAddCategory = { [weak self] in
