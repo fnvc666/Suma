@@ -16,26 +16,28 @@ final class SpendThisMonthView: UIView {
     private let spentMonthLabel = UILabel()
     private let monthDates = UILabel()
     private let augustColumns: [Column] = [
-        .init(category: "Rent", amount: "300", maximum: 10, current: 3),
-        .init(category: "Food", amount: "400", maximum: 10, current: 4),
-        .init(category: "Sports", amount: "500", maximum: 10, current: 5),
-        .init(category: "Shops", amount: "600", maximum: 10, current: 6),
-        .init(category: "Savings", amount: "700", maximum: 10, current: 7),
+        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200),
+        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300),
+        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100),
+        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300),
+        .init(category: "Savings", amount: 700, maximum: 10, current: 7, badget: 500),
     ]
     private let septemberColumns: [Column] = [
-        .init(category: "Rent", amount: "600", maximum: 10, current: 6),
-        .init(category: "Food", amount: "300", maximum: 10, current: 3),
-        .init(category: "Sports", amount: "500", maximum: 10, current: 5),
-        .init(category: "Shops", amount: "500", maximum: 10, current: 5),
-        .init(category: "Savings", amount: "100", maximum: 10, current: 1),
+        .init(category: "Rent",    amount: 600, maximum: 10, current: 6, badget: 1200),
+        .init(category: "Food",    amount: 300, maximum: 10, current: 3, badget: 300),
+        .init(category: "Sports",  amount: 500, maximum: 10, current: 5, badget: 100),
+        .init(category: "Shops",   amount: 500, maximum: 10, current: 5, badget: 300),
+        .init(category: "Savings", amount: 100, maximum: 10, current: 1, badget: 500),
     ]
+
     private let emptyColumns: [Column] = [
-        .init(category: "Rent", amount: "0", maximum: 10, current: 0),
-        .init(category: "Food", amount: "0", maximum: 10, current: 0),
-        .init(category: "Sports", amount: "0", maximum: 10, current: 0),
-        .init(category: "Shops", amount: "0", maximum: 10, current: 0),
-        .init(category: "Savings", amount: "0", maximum: 10, current: 0),
+        .init(category: "Rent",    amount: 0, maximum: 10, current: 0, badget: 1200),
+        .init(category: "Food",    amount: 0, maximum: 10, current: 0, badget: 300),
+        .init(category: "Sports",  amount: 0, maximum: 10, current: 0, badget: 100),
+        .init(category: "Shops",   amount: 0, maximum: 10, current: 0, badget: 300),
+        .init(category: "Savings", amount: 0, maximum: 10, current: 0, badget: 500),
     ]
+
     private lazy var monthsSpend: [String : [Column]] = ["August": augustColumns, "September": septemberColumns]
     private lazy var currentMonthName: String = monthName(for: currentMonthNumber())
     private lazy var currentMonth: [Column] = monthsSpend[currentMonthName] ?? emptyColumns
@@ -135,7 +137,7 @@ final class SpendThisMonthView: UIView {
         }
         
         for mon in data {
-            let colView = ColumnView(frame: .zero, column: mon)
+            let colView = ColumnView(frame: .zero, column: mon, mode: .spent)
             colView.widthAnchor.constraint(equalToConstant: 55).isActive = true
             columnsHstack.addArrangedSubview(colView)
         }
