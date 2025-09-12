@@ -14,6 +14,15 @@ class FinanceViewController: UIViewController {
     private let scroll = UIScrollView()
     private let stack = UIStackView()
     
+    // temp
+    private let augustColumns: [Column] = [
+        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200),
+        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300),
+        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100),
+        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300),
+        .init(category: "Savings", amount: 400, maximum: 10, current: 7, badget: 500),
+    ]
+    
     init(viewModel: FinanceViewModel) {
         self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -26,6 +35,9 @@ class FinanceViewController: UIViewController {
         vm.viewDidLoad()
         layout()
         buildComponents()
+        
+        navigationItem.backButtonDisplayMode = .minimal
+        navigationController?.navigationBar.tintColor = .white
     }
 
     private func layout() {
@@ -82,10 +94,11 @@ class FinanceViewController: UIViewController {
         let totalBalance = TotalBalanceView()
         let categoriesStats = CategoriesStatsView()
         let addCategoryButton = AddCategoryButton()
+        let testFolder = FolderView(frame: .zero, category: augustColumns[0])
         
         addCategoryButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
         
-        [header, totalBalance, categoriesStats, addCategoryButton].forEach {
+        [header, totalBalance, categoriesStats, addCategoryButton, testFolder].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
