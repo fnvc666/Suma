@@ -14,8 +14,8 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
     private let stack = UIStackView()
-    
-//    private let folder = FolderView()
+    private let headerHStack = UIStackView()
+    private let folder = FolderView(frame: .zero, category: .init(category: "", amount: 0, maximum: 0, current: 0, badget: 0, number: "00", gradient: "GreenGradient"))
     
     init(viewModel: AddCategoryViewModel) {
         self.vm = viewModel
@@ -50,7 +50,18 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         scroll.addSubview(stack)
         
         stack.addArrangedSubview(navBar)
-//        stack.addArrangedSubview(folder)
+        
+        headerHStack.axis = .horizontal
+        headerHStack.alignment = .center
+        headerHStack.isLayoutMarginsRelativeArrangement = true
+        
+        headerHStack.addArrangedSubview(folder)
+        
+        folder.widthAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
+        folder.heightAnchor.constraint(equalTo: folder.widthAnchor).isActive = true
+        [folder].forEach {
+            stack.addArrangedSubview($0)
+        }
         
         [background, scroll, navBar, stack].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false

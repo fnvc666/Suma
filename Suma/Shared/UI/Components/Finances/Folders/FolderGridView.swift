@@ -8,6 +8,8 @@ import UIKit
 
 final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    var onSelect: ((Int) -> Void)?
+    
     var items: [Column] {
         didSet {
             collectionView.reloadData()
@@ -103,5 +105,10 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
     func collectionView(_ cv: UICollectionView,
                         layout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets { contentInsets }
+    
+    // MARK: - Delegate
+    func collectionView(_ cv: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        onSelect?(indexPath.item)
+    }
 }
 

@@ -36,7 +36,6 @@ final class FolderView: UIView {
         folderColor.clipsToBounds = true
         folderColor.translatesAutoresizingMaskIntoConstraints = false
         
-//        subtract.contentMode = .
         subtract.translatesAutoresizingMaskIntoConstraints = false
         
         categoryLabel.text = category.category

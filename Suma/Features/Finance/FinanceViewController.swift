@@ -94,10 +94,10 @@ class FinanceViewController: UIViewController {
         let totalBalance = TotalBalanceView()
         let categoriesStats = CategoriesStatsView()
         let addCategoryButton = AddCategoryButton()
-        let grid = CategoryGridComponent(
-            items: augustColumns,
-            columns: 2
-        )
+        let grid = CategoryGridComponent(items: augustColumns, columns: 2)
+        grid.onSelect = { [weak self] categoryId in
+//            self?.vm.categoryTapped(categoryId: categoryId)
+        }
         
         addCategoryButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
         
