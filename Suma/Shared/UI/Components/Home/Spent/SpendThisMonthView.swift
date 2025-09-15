@@ -16,26 +16,26 @@ final class SpendThisMonthView: UIView {
     private let spentMonthLabel = UILabel()
     private let monthDates = UILabel()
     private let augustColumns: [Column] = [
-        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200),
-        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300),
-        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100),
-        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300),
-        .init(category: "Savings", amount: 700, maximum: 10, current: 7, badget: 500),
+        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200, number: "01", gradient: "BlueGradient"),
+        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300, number: "02", gradient: "BlueGradient"),
+        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100, number: "03", gradient: "BlueGradient"),
+        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300, number: "04", gradient: "BlueGradient"),
+        .init(category: "Savings", amount: 700, maximum: 10, current: 7, badget: 500, number: "05", gradient: "BlueGradient"),
     ]
     private let septemberColumns: [Column] = [
-        .init(category: "Rent",    amount: 600, maximum: 10, current: 6, badget: 1200),
-        .init(category: "Food",    amount: 300, maximum: 10, current: 3, badget: 300),
-        .init(category: "Sports",  amount: 500, maximum: 10, current: 5, badget: 100),
-        .init(category: "Shops",   amount: 500, maximum: 10, current: 5, badget: 300),
-        .init(category: "Savings", amount: 100, maximum: 10, current: 1, badget: 500),
+        .init(category: "Rent",    amount: 600, maximum: 10, current: 6, badget: 1200, number: "01", gradient: "BlueGradient"),
+        .init(category: "Food",    amount: 300, maximum: 10, current: 3, badget: 300, number: "02", gradient: "BlueGradient"),
+        .init(category: "Sports",  amount: 500, maximum: 10, current: 5, badget: 100, number: "03", gradient: "BlueGradient"),
+        .init(category: "Shops",   amount: 500, maximum: 10, current: 5, badget: 300, number: "04", gradient: "BlueGradient"),
+        .init(category: "Savings", amount: 100, maximum: 10, current: 1, badget: 500, number: "05", gradient: "BlueGradient"),
     ]
 
     private let emptyColumns: [Column] = [
-        .init(category: "Rent",    amount: 0, maximum: 10, current: 0, badget: 1200),
-        .init(category: "Food",    amount: 0, maximum: 10, current: 0, badget: 300),
-        .init(category: "Sports",  amount: 0, maximum: 10, current: 0, badget: 100),
-        .init(category: "Shops",   amount: 0, maximum: 10, current: 0, badget: 300),
-        .init(category: "Savings", amount: 0, maximum: 10, current: 0, badget: 500),
+        .init(category: "Rent",    amount: 0, maximum: 10, current: 0, badget: 1200, number: "01", gradient: "BlueGradient"),
+        .init(category: "Food",    amount: 0, maximum: 10, current: 0, badget: 300, number: "02", gradient: "BlueGradient"),
+        .init(category: "Sports",  amount: 0, maximum: 10, current: 0, badget: 100, number: "03", gradient: "BlueGradient"),
+        .init(category: "Shops",   amount: 0, maximum: 10, current: 0, badget: 300, number: "04", gradient: "BlueGradient"),
+        .init(category: "Savings", amount: 0, maximum: 10, current: 0, badget: 500, number: "05", gradient: "BlueGradient"),
     ]
 
     private lazy var monthsSpend: [String : [Column]] = ["August": augustColumns, "September": septemberColumns]

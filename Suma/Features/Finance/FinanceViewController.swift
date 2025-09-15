@@ -16,11 +16,11 @@ class FinanceViewController: UIViewController {
     
     // temp
     private let augustColumns: [Column] = [
-        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200),
-        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300),
-        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100),
-        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300),
-        .init(category: "Savings", amount: 400, maximum: 10, current: 7, badget: 500),
+        .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200, number: "01", gradient: "GreenGradient"),
+        .init(category: "Food", amount: 250, maximum: 10, current: 4, badget: 300, number: "02", gradient: "BlueGradient"),
+        .init(category: "Sports", amount: 55, maximum: 10, current: 5, badget: 100, number: "03", gradient: "OrangeGradient"),
+        .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300, number: "04", gradient: "MintGradient"),
+        .init(category: "Savings", amount: 400, maximum: 10, current: 7, badget: 500, number: "05", gradient: "RedGradient"),
     ]
     
     init(viewModel: FinanceViewModel) {
@@ -39,7 +39,7 @@ class FinanceViewController: UIViewController {
         navigationItem.backButtonDisplayMode = .minimal
         navigationController?.navigationBar.tintColor = .white
     }
-
+    
     private func layout() {
         view.addSubview(background)
         view.addSubview(scroll)
@@ -94,15 +94,23 @@ class FinanceViewController: UIViewController {
         let totalBalance = TotalBalanceView()
         let categoriesStats = CategoriesStatsView()
         let addCategoryButton = AddCategoryButton()
-        let testFolder = FolderView(frame: .zero, category: augustColumns[0])
+        let grid = CategoryGridComponent(
+            items: augustColumns,
+            columns: 2
+        )
         
         addCategoryButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
         
-        [header, totalBalance, categoriesStats, addCategoryButton, testFolder].forEach {
+        [header, totalBalance, categoriesStats, addCategoryButton, grid].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
         stack.setCustomSpacing(32, after: header)
+        
+        NSLayoutConstraint.activate([
+            grid.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            grid.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor)
+        ])
     }
     
     @objc private func tap() {

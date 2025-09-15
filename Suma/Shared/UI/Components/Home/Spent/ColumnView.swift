@@ -12,6 +12,8 @@ struct Column {
     let maximum: Int
     let current: Int
     let badget: Double
+    let number: String
+    let gradient: String
 }
 
 enum ColumnMode {

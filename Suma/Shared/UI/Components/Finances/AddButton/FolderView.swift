@@ -7,16 +7,19 @@
 import UIKit
 
 final class FolderView: UIView {
-    private let folderColor = UIImageView(image: UIImage(named: "BlueGradient"))
+    private let folderColor: UIImageView
     private let subtract = UIImageView(image: UIImage(named: "Subtract"))
     private let categoryLabel = UILabel()
     private let amountLabel = UILabel()
     private let number = UILabel()
     
+    private let contentInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+    
     var category: Column
     
     init(frame: CGRect, category: Column) {
         self.category = category
+        self.folderColor = UIImageView(image: UIImage(named: category.gradient))
         super.init(frame: frame)
         setupUI()
     }
@@ -33,7 +36,7 @@ final class FolderView: UIView {
         folderColor.clipsToBounds = true
         folderColor.translatesAutoresizingMaskIntoConstraints = false
         
-        subtract.contentMode = .scaleAspectFit
+//        subtract.contentMode = .
         subtract.translatesAutoresizingMaskIntoConstraints = false
         
         categoryLabel.text = category.category
@@ -44,7 +47,7 @@ final class FolderView: UIView {
         amountLabel.font = UIFont(name: "Geist-Regular", size: 12)
         amountLabel.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
         
-        number.text = "01"
+        number.text = category.number
         number.font = UIFont(name: "Geist-Regular", size: 28)
         number.textColor = .white
         
@@ -60,19 +63,18 @@ final class FolderView: UIView {
         }
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 166),
-            widthAnchor.constraint(equalToConstant: 166),
             
-            folderColor.centerYAnchor.constraint(equalTo: centerYAnchor),
-            folderColor.centerXAnchor.constraint(equalTo: centerXAnchor),
-            folderColor.widthAnchor.constraint(equalToConstant: 156),
-            folderColor.heightAnchor.constraint(equalToConstant: 156),
+            folderColor.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets.top),
+            folderColor.leadingAnchor.constraint(equalTo: leadingAnchor, constant: contentInsets.left),
+            folderColor.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentInsets.right),
+            folderColor.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets.bottom),
             
             subtract.leadingAnchor.constraint(equalTo: folderColor.leadingAnchor),
             subtract.trailingAnchor.constraint(equalTo: folderColor.trailingAnchor),
             subtract.bottomAnchor.constraint(equalTo: folderColor.bottomAnchor),
+            subtract.heightAnchor.constraint(equalTo: folderColor.heightAnchor, multiplier: 0.65),
             
-            subtract.heightAnchor.constraint(equalToConstant: 114),
+            subtract.heightAnchor.constraint(equalToConstant: 100),
             
             categoryLabel.topAnchor.constraint(equalTo: subtract.topAnchor, constant: 4),
             categoryLabel.leadingAnchor.constraint(equalTo: subtract.leadingAnchor, constant: 9),
