@@ -85,4 +85,8 @@ final class FolderView: UIView {
             amountLabel.trailingAnchor.constraint(equalTo: subtract.trailingAnchor, constant: -9),
         ])
     }
+    
+    func setGradient(_ gradient: String) {
+        self.folderColor.image = UIImage(named: gradient)
+    }
 }

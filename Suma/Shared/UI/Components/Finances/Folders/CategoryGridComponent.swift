@@ -38,8 +38,6 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(frame: .zero)
         
-        translatesAutoresizingMaskIntoConstraints = false
-        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self

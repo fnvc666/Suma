@@ -35,6 +35,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         layout()
+        buildComponents()
         
         navBar.onBack = { [weak self] in self?.vm.onClose?() }
     }
@@ -49,25 +50,9 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         stack.directionalLayoutMargins = .init(top: 25, leading: 20, bottom: 20, trailing: 20)
         scroll.addSubview(stack)
         
-        stack.addArrangedSubview(navBar)
-        
-        headerHStack.axis = .horizontal
-        headerHStack.alignment = .center
-        headerHStack.isLayoutMarginsRelativeArrangement = true
-        
-        headerHStack.addArrangedSubview(folder)
-        
-        folder.widthAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
-        folder.heightAnchor.constraint(equalTo: folder.widthAnchor).isActive = true
-        [folder].forEach {
-            stack.addArrangedSubview($0)
-        }
-        
-        [background, scroll, navBar, stack].forEach {
+        [background, scroll, stack].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        
-        stack.setCustomSpacing(32, after: navBar)
         
         NSLayoutConstraint.activate([
             background.topAnchor.constraint(equalTo: view.topAnchor),
@@ -85,10 +70,50 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
             stack.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor),
             stack.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
             
+            stack.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor)
+        ])
+    }
+    
+    private func buildComponents() {
+        stack.arrangedSubviews.forEach {
+            stack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        
+        headerHStack.axis = .horizontal
+        headerHStack.alignment = .center
+        headerHStack.isLayoutMarginsRelativeArrangement = true
+        
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
+        folder.widthAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
+        folder.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
+        folder.translatesAutoresizingMaskIntoConstraints = false
+ 
+        let gradients = GradientGridComponent()
+        
+        gradients.onSelect = { [weak self] color in
+            self?.folder.setGradient(color)
+        }
+        
+        headerHStack.addArrangedSubview(folder)
+        headerHStack.addArrangedSubview(spacer)
+        headerHStack.addArrangedSubview(gradients)
+        
+        [navBar, headerHStack].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            stack.addArrangedSubview($0)
+        }
+        
+        NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
             
-            stack.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor)
+            headerHStack.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            headerHStack.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
+        
+        stack.setCustomSpacing(32, after: navBar)
     }
 }

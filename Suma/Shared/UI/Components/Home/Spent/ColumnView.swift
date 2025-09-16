@@ -13,7 +13,7 @@ struct Column {
     let current: Int
     let badget: Double
     let number: String
-    let gradient: String
+    var gradient: String
 }
 
 enum ColumnMode {
