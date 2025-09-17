@@ -37,7 +37,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         layout()
         buildComponents()
         
-        navBar.onBack = { [weak self] in self?.vm.onClose?() }
+        navBar.onBack = { [weak vm] in vm?.onClose?() }
     }
     
     private func layout() {
@@ -87,21 +87,21 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         let spacer = UIView()
         spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
-        folder.widthAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
-        folder.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45).isActive = true
         folder.translatesAutoresizingMaskIntoConstraints = false
  
         let gradients = GradientGridComponent()
         
-        gradients.onSelect = { [weak self] color in
-            self?.folder.setGradient(color)
+        gradients.onSelect = { [weak vm] color in
+            vm?.setGradient(color)
+            self.folder.setGradient(color)
         }
         
         headerHStack.addArrangedSubview(folder)
         headerHStack.addArrangedSubview(spacer)
         headerHStack.addArrangedSubview(gradients)
         
-        [navBar, headerHStack].forEach {
+        let form = FormSection()
+        [navBar, headerHStack, form].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -112,8 +112,15 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
             
             headerHStack.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             headerHStack.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            folder.widthAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45),
+            folder.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.width - 40) * 0.45),
+            
+            form.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            form.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
         
         stack.setCustomSpacing(32, after: navBar)
+        stack.setCustomSpacing(25, after: headerHStack)
     }
 }

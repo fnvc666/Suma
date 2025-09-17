@@ -9,13 +9,22 @@ import Foundation
 final class AddCategoryViewModel {
     private let categories: CategoriesRepositoryProtocol
     
+    var onGradinetsUpdate: ((String) -> Void)?
+    var onClose: (() -> Void)?
+    var onSaved: (() -> Void)?
+    
+    private var selectedGradient = "GreenGradient"
+    private let name = ""
+    private let totalAmount = 0
+    
     init(categories: CategoriesRepositoryProtocol) {
         self.categories = categories
     }
     
-    // Outside navigation
-    var onClose: (() -> Void)?
-    var onSaved: (() -> Void)?
+    func setGradient(_ gradient: String) {
+        selectedGradient = gradient
+    }
+    
     
     // Inputs <- View
     func viewDidLoad() {}
