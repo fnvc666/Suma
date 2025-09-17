@@ -10,6 +10,7 @@ final class FormSection: UIView {
     
     let customNameField = CustomPlaceholder(frame: .zero, titleText: "Name", textfieldPlaceholder: "Enter category name")
     let customAmountField = CustomPlaceholder(frame: .zero, titleText: "Total Amount", textfieldPlaceholder: "Enter amount")
+    let currencySection = CurrencySection()
     
     override init (frame: CGRect) {
         super.init(frame: frame)
@@ -21,8 +22,10 @@ final class FormSection: UIView {
     private func setupUI() {
         addSubview(customNameField)
         addSubview(customAmountField)
+        addSubview(currencySection)
         customNameField.translatesAutoresizingMaskIntoConstraints = false
         customAmountField.translatesAutoresizingMaskIntoConstraints = false
+        currencySection.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             customNameField.topAnchor.constraint(equalTo: topAnchor),
@@ -33,7 +36,11 @@ final class FormSection: UIView {
             customAmountField.leadingAnchor.constraint(equalTo: customNameField.leadingAnchor),
             customAmountField.trailingAnchor.constraint(equalTo: customNameField.trailingAnchor),
             
-            customAmountField.bottomAnchor.constraint(equalTo: bottomAnchor),
+            currencySection.topAnchor.constraint(equalTo: customAmountField.bottomAnchor, constant: 20),
+            currencySection.leadingAnchor.constraint(equalTo: customAmountField.leadingAnchor),
+            currencySection.trailingAnchor.constraint(equalTo: customAmountField.trailingAnchor),
+            
+            currencySection.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }
