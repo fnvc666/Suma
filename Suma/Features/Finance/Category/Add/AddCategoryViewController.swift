@@ -16,6 +16,9 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let stack = UIStackView()
     private let headerHStack = UIStackView()
     private let folder = FolderView(frame: .zero, category: .init(category: "", amount: 0, maximum: 0, current: 0, badget: 0, number: "00", gradient: "GreenGradient"))
+    let form = FormSection()
+    let gradients = GradientGridComponent()
+    let spacer = UIView()
     
     init(viewModel: AddCategoryViewModel) {
         self.vm = viewModel
@@ -37,6 +40,15 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         layout()
         buildComponents()
         
+        form.onNameChanged = { [weak self] text in
+            self?.vm.setName(text)
+            self?.folder.setName(text)
+        }
+        
+        form.onAmountChanged = { [weak self] amount in
+            self?.vm.setAmount(amount)
+            self?.folder.setAmount(amount)
+        }
         navBar.onBack = { [weak vm] in vm?.onClose?() }
     }
     
@@ -84,12 +96,8 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         headerHStack.alignment = .center
         headerHStack.isLayoutMarginsRelativeArrangement = true
         
-        let spacer = UIView()
         spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        
         folder.translatesAutoresizingMaskIntoConstraints = false
- 
-        let gradients = GradientGridComponent()
         
         gradients.onSelect = { [weak vm] color in
             vm?.setGradient(color)
@@ -100,7 +108,6 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         headerHStack.addArrangedSubview(spacer)
         headerHStack.addArrangedSubview(gradients)
         
-        let form = FormSection()
         [navBar, headerHStack, form].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)

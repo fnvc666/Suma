@@ -89,4 +89,13 @@ final class FolderView: UIView {
     func setGradient(_ gradient: String) {
         self.folderColor.image = UIImage(named: gradient)
     }
+    
+    func setName(_ name: String) {
+        self.categoryLabel.text = name
+        print("new name")
+    }
+    
+    func setAmount(_ amount: String) {
+        self.amountLabel.text = amount
+    }
 }

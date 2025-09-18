@@ -8,13 +8,17 @@ import UIKit
 
 final class FormSection: UIView {
     
-    let customNameField = CustomPlaceholder(frame: .zero, titleText: "Name", textfieldPlaceholder: "Enter category name")
-    let customAmountField = CustomPlaceholder(frame: .zero, titleText: "Total Amount", textfieldPlaceholder: "Enter amount")
+    var onNameChanged: ((String) -> Void)?
+    var onAmountChanged: ((String) -> Void)?
+    
+    let customNameField = CustomPlaceholder(frame: .zero, titleText: "Name", textfieldPlaceholder: "Enter category name", contentType: .text)
+    let customAmountField = CustomPlaceholder(frame: .zero, titleText: "Total Amount", textfieldPlaceholder: "Enter amount", contentType: .num)
     let currencySection = CurrencySection()
     
     override init (frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        wireCallbacks()
     }
     
     required init?(coder: NSCoder) { fatalError() }
@@ -43,4 +47,15 @@ final class FormSection: UIView {
             currencySection.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
+    
+    private func wireCallbacks() {
+        customNameField.onTextChanged = { [weak self] text in
+            self?.onNameChanged?(text)
+        }
+        
+        customAmountField.onTextChanged = { [weak self] text in
+            self?.onAmountChanged?(text)
+        }
+    }
+    
 }

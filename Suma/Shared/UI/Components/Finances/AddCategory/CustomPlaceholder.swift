@@ -8,6 +8,8 @@ import UIKit
 
 final class CustomPlaceholder: UIView {
     
+    var onTextChanged: ((String) -> Void)?
+    
     var name: String = "" {
         didSet {
             if textfield.text != name {
@@ -16,6 +18,7 @@ final class CustomPlaceholder: UIView {
         }
     }
     
+    var contentType: ContentType
     var titleText: String
     var textfieldPlaceholder: String
     
@@ -23,7 +26,8 @@ final class CustomPlaceholder: UIView {
     let title = UILabel()
     let textfield = UITextField()
     
-    init(frame: CGRect, titleText: String, textfieldPlaceholder: String) {
+    init(frame: CGRect, titleText: String, textfieldPlaceholder: String, contentType: ContentType) {
+        self.contentType = contentType
         self.titleText = titleText
         self.textfieldPlaceholder = textfieldPlaceholder
         super.init(frame: frame)
@@ -60,11 +64,14 @@ final class CustomPlaceholder: UIView {
         textfield.font = UIFont(name: "Geist-Regular", size: 14)
         textfield.leftView = pad
         textfield.leftViewMode = .always
+        textfield.keyboardType = contentType == .text ? .default : .decimalPad
         textfield.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.2)
         textfield.layer.borderWidth = 1
         textfield.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.2).cgColor
         textfield.layer.cornerRadius = 6
         textfield.translatesAutoresizingMaskIntoConstraints = false
+        
+        textfield.addTarget(self, action: #selector(handleCahnged), for: .editingChanged)
         
         [title, textfield].forEach {
             stack.addArrangedSubview($0)
@@ -80,4 +87,11 @@ final class CustomPlaceholder: UIView {
             textfield.widthAnchor.constraint(equalTo: stack.widthAnchor, multiplier: 0.8),
         ])
     }
+    
+    @objc private func handleCahnged(_ tf: UITextField) { onTextChanged?(tf.text ?? "")}
+}
+
+enum ContentType {
+    case text
+    case num
 }
