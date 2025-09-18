@@ -92,7 +92,6 @@ final class FolderView: UIView {
     
     func setName(_ name: String) {
         self.categoryLabel.text = name
-        print("new name")
     }
     
     func setAmount(_ amount: String) {

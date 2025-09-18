@@ -9,6 +9,7 @@ import UIKit
 final class CustomTabelCell: UITableViewCell {
     static let reuseIdentifier = "CustomTabelCell"
     private let title = UILabel()
+    private let flag = UIImageView()
     
     var currency: String
     
@@ -21,20 +22,29 @@ final class CustomTabelCell: UITableViewCell {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     private func setupUI() {
-        backgroundColor = .clear
-        contentView.backgroundColor = UIColor(white: 1, alpha: 0.2)
-        selectionStyle = .none
+        backgroundColor = UIColor(red: 0.949, green: 0.957, blue: 0.953, alpha: 1)
+        selectionStyle = .gray
         
         title.text = currency
-        title.textColor = .white
-        title.font = .systemFont(ofSize: 17, weight: .medium)
+        title.textColor = .black
+        title.font = UIFont(name: "Geist-Regular", size: 12)
         title.translatesAutoresizingMaskIntoConstraints = false
+        
+        flag.image = UIImage(named: "\(currency.lowercased())FlagIcon")
+        flag.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(flag)
         contentView.addSubview(title)
         
         NSLayoutConstraint.activate([
-            title.topAnchor.constraint(equalTo: topAnchor),
-            title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            title.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            flag.centerYAnchor.constraint(equalTo: centerYAnchor),
+            flag.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18),
+            flag.heightAnchor.constraint(equalToConstant: 16),
+            flag.widthAnchor.constraint(equalToConstant: 16),
+            
+            title.centerYAnchor.constraint(equalTo: centerYAnchor),
+            title.leadingAnchor.constraint(equalTo: flag.trailingAnchor, constant: 10),
         ])
         
     }

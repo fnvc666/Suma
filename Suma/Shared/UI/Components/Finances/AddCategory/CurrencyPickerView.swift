@@ -18,6 +18,9 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        
+        tableView.layer.cornerRadius = 6
+        tableView.layer.masksToBounds = true
     }
     
     required init?(coder: NSCoder) { fatalError() }
@@ -55,9 +58,9 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
             button.heightAnchor.constraint(equalToConstant: 44),
             
-            tableView.topAnchor.constraint(equalTo: button.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 15),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.3),
             tableHeight,
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
