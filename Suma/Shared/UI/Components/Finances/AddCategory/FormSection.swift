@@ -10,6 +10,7 @@ final class FormSection: UIView {
     
     var onNameChanged: ((String) -> Void)?
     var onAmountChanged: ((String) -> Void)?
+    var onCurrencyChanged: ((String) -> Void)?
     
     let customNameField = CustomPlaceholder(frame: .zero, titleText: "Name", textfieldPlaceholder: "Enter category name", contentType: .text)
     let customAmountField = CustomPlaceholder(frame: .zero, titleText: "Total Amount", textfieldPlaceholder: "Enter amount", contentType: .num)
@@ -55,6 +56,10 @@ final class FormSection: UIView {
         
         customAmountField.onTextChanged = { [weak self] text in
             self?.onAmountChanged?(text)
+        }
+        
+        currencySection.onCurrencyChanged = { [weak self] currency in
+            self?.onCurrencyChanged?(currency)
         }
     }
     

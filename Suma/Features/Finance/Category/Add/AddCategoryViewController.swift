@@ -49,6 +49,10 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
             self?.vm.setAmount(amount)
             self?.folder.setAmount(amount)
         }
+        
+        form.onCurrencyChanged = { [weak self] currency in
+            self?.vm.setCurrency(currency)
+        }
         navBar.onBack = { [weak vm] in vm?.onClose?() }
     }
     

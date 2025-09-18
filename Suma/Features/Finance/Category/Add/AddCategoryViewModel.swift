@@ -11,11 +11,13 @@ final class AddCategoryViewModel {
     
     private(set) var name: String = ""
     private(set) var totalAmount: Decimal = 0
+    private(set) var currency: String = "USD"
     private var selectedGradient = "GreenGradient"
     
     // Form Section
     var onNameChanged: ((String) -> Void)?
     var onAmountChanged: ((Decimal) -> Void)?
+    var onCurrencyChanged: ((String) -> Void)?
     
     var onGradinetsUpdate: ((String) -> Void)?
     var onClose: (() -> Void)?
@@ -48,6 +50,11 @@ final class AddCategoryViewModel {
             totalAmount = text
             onAmountChanged?(text)
         }
+    }
+    
+    func setCurrency(_ newCurrency: String) {
+        currency = newCurrency
+        onCurrencyChanged?(newCurrency)
     }
     
     // Inputs <- View

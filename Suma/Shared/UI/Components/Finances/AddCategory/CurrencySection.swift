@@ -10,9 +10,15 @@ final class CurrencySection: UIView {
     private let label = UILabel()
     private let picker = CurrencyPickerView()
     
+    var onCurrencyChanged: ((String) -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        
+        picker.onCurrencySelected = { [weak self] currency in
+            self?.onCurrencyChanged?(currency)
+        }
     }
     
     required init?(coder: NSCoder) { fatalError() }

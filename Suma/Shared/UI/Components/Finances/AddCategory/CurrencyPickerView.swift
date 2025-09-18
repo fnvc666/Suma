@@ -15,6 +15,8 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     
     private let currencies = [("USD", "usdFlagIcon"), ("EUR", "eurFlagIcon"), ("PLN", "plnFlagIcon")]
     
+    var onCurrencySelected: ((String) -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -91,6 +93,8 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
         let (currency, icon) = currencies[indexPath.row]
         button.configuration = makeButtonConfig(title: "\(currency) ▾", imageName: icon)
         toggle()
+        
+        onCurrencySelected?(currency)
     }
     
     // MARK: - Helpers
