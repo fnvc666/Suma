@@ -1,12 +1,12 @@
 //
-//  addCategoryButton.swift
+//  AddNewCategoryButton.swift
 //  Suma
 //
 //  Created by Pavel Pavel on 12/09/2025.
 //
 import UIKit
 
-final class AddCategoryButton: UIButton {
+final class AddNewCategoryButton: UIButton {
     private let hstack = UIStackView()
     private let title = UILabel()
     private let icon = UIImageView(image: UIImage(systemName: "plus"))

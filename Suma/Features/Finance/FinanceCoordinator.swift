@@ -40,7 +40,7 @@ final class FinanceCoordinator: Coordinator {
             self?.nav.popViewController(animated: true)
         }
         
-        vm.onSaved = { [weak self] in
+        vm.onAdded = { [weak self] in
             self?.nav.popViewController(animated: true)
         }
         

@@ -8,6 +8,10 @@ import Foundation
 
 struct Category: Identifiable, Equatable {
     let id: UUID
+    var number: String
     var name: String
-    var color: Int32
+    var budget: Double
+    var current: Double
+    var gradient: String
+    var currency: String
 }

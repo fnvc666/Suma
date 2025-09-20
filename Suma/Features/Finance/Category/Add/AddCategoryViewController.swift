@@ -15,6 +15,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let scroll = UIScrollView()
     private let stack = UIStackView()
     private let headerHStack = UIStackView()
+    private let addButton = AddCategoryButton()
     private let folder = FolderView(frame: .zero, category: .init(category: "", amount: 0, maximum: 0, current: 0, badget: 0, number: "00", gradient: "GreenGradient"))
     let form = FormSection()
     let gradients = GradientGridComponent()
@@ -54,6 +55,10 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
             self?.vm.setCurrency(currency)
         }
         navBar.onBack = { [weak vm] in vm?.onClose?() }
+        
+        addButton.onAddClicked = { [weak self] in
+            self?.vm.addTapped()
+        }
     }
     
     private func layout() {
@@ -112,7 +117,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         headerHStack.addArrangedSubview(spacer)
         headerHStack.addArrangedSubview(gradients)
         
-        [navBar, headerHStack, form].forEach {
+        [navBar, headerHStack, form, addButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -129,6 +134,12 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
             
             form.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             form.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            addButton.topAnchor.constraint(equalTo: form.bottomAnchor, constant: 24),
+            addButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            addButton.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            addButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor),
+            
         ])
         
         stack.setCustomSpacing(32, after: navBar)
