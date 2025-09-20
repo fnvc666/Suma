@@ -16,7 +16,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let stack = UIStackView()
     private let headerHStack = UIStackView()
     private let addButton = AddCategoryButton()
-    private let folder = FolderView(frame: .zero, category: .init(category: "", amount: 0, maximum: 0, current: 0, badget: 0, number: "00", gradient: "GreenGradient"))
+    private let folder = FolderView(frame: .zero, category: .init(id: UUID(), number: "99", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD"))
     let form = FormSection()
     let gradients = GradientGridComponent()
     let spacer = UIView()

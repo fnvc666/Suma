@@ -14,6 +14,8 @@ class FinanceViewController: UIViewController {
     private let scroll = UIScrollView()
     private let stack = UIStackView()
     
+    private var grid: CategoryGridComponent!
+    
     // temp
     private let augustColumns: [Column] = [
         .init(category: "Rent", amount: 500, maximum: 10, current: 3, badget: 1200, number: "01", gradient: "GreenGradient"),
@@ -22,6 +24,8 @@ class FinanceViewController: UIViewController {
         .init(category: "Shops", amount: 100, maximum: 10, current: 6, badget: 300, number: "04", gradient: "MintGradient"),
         .init(category: "Savings", amount: 400, maximum: 10, current: 7, badget: 500, number: "05", gradient: "RedGradient"),
     ]
+    
+    private var categories: [Category] = []
     
     init(viewModel: FinanceViewModel) {
         self.vm = viewModel
@@ -32,7 +36,11 @@ class FinanceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.viewDidLoad()
+        vm.onFetch = { [weak self] data in
+            self?.categories = data
+            self?.updateGrid(with: data)
+        }
+        categories = vm.fetchCategory
         layout()
         buildComponents()
         
@@ -94,7 +102,7 @@ class FinanceViewController: UIViewController {
         let totalBalance = TotalBalanceView()
         let categoriesStats = CategoriesStatsView()
         let addCategoryButton = AddNewCategoryButton()
-        let grid = CategoryGridComponent(items: augustColumns, columns: 2)
+        grid = CategoryGridComponent(items: categories, columns: 2)
         grid.onSelect = { [weak self] categoryId in
 //            self?.vm.categoryTapped(categoryId: categoryId)
         }
@@ -116,5 +124,10 @@ class FinanceViewController: UIViewController {
     @objc private func tap() {
         vm.addCategoryTapped()
         print("tapped")
+    }
+    
+    private func updateGrid(with items: [Category]) {
+        print("UPDATE")
+        grid?.reload(with: items)
     }
 }

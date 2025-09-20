@@ -13,26 +13,34 @@ final class FinanceViewModel {
     init(categories: CategoriesRepositoryProtocol, transactions: TransactionsRepositoryProtocol) {
         self.categories = categories
         self.transactions = transactions
+        Task { await load() }
     }
+    var fetchCategory: [Category] = []
     
     var onAddCategory: (() -> Void)?
     var onOpenCategory: ((UUID) -> Void)?
-    
-    // MARK: Outputs -> View
-//    private(set) var state: HomeState = .init(
-//        totalBalanceFormatted: "1.11",
-//        selectedMonth: .april,
-//        spendThisMonthBars: [50, 40, 30, 20, 10],
-//        historyPoints: [6, 5, 8, 4, 3]
-//    ) {
-//        didSet { }
-//    }
+    var onFetch: (([Category]) -> Void)? {
+        didSet {
+            DispatchQueue.main.async {
+                self.onFetch?(self.fetchCategory)
+            }
+        }
+    }
     
     // MARK: Input <- View
-    func viewDidLoad() {
-        
-    }
+    func viewDidLoad() {}
     
     func addCategoryTapped() { onAddCategory?() }
     func categoryTapped(categoryId: UUID) { onOpenCategory?(categoryId) }
+    
+    func reload() { Task { await load()} }
+    func load() async {
+        do {
+            let categories = try await self.categories.listAll()
+            self.fetchCategory = categories
+            await MainActor.run{ onFetch?(categories) }
+        } catch {
+            print("Error during fetching data: \(error)")
+        }
+    }
 }

@@ -10,7 +10,7 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
     
     var onSelect: ((Int) -> Void)?
     
-    var items: [Column] {
+    var items: [Category] {
         didSet {
             collectionView.reloadData()
             invalidateIntrinsicContentSize()
@@ -25,7 +25,7 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
     private let collectionView: UICollectionView
     
     // MARK: - Init
-    init(items: [Column], columns: Int = 2) {
+    init(items: [Category], columns: Int = 2) {
         self.items = items
         self.columns = max(columns, 1)
         
@@ -65,8 +65,9 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
     }
     
     // MARK: - Public API
-    func reload(with newItems: [Column]) {
+    func reload(with newItems: [Category]) {
         self.items = newItems
+        collectionView.reloadData()
     }
     
     // MARK: - DataSource
@@ -81,7 +82,7 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
             for: indexPath
         ) as! FolderCollectionCell
         cell.configure(category: items[indexPath.item])
-        print(items[indexPath.item])
+        print("cell", indexPath.item, items[indexPath.item].number)
         return cell
     }
     

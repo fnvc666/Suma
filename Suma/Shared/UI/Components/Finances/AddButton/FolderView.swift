@@ -15,9 +15,9 @@ final class FolderView: UIView {
     
     private let contentInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     
-    var category: Column
+    var category: Category
     
-    init(frame: CGRect, category: Column) {
+    init(frame: CGRect, category: Category) {
         self.category = category
         self.folderColor = UIImageView(image: UIImage(named: category.gradient))
         super.init(frame: frame)
@@ -38,11 +38,11 @@ final class FolderView: UIView {
         
         subtract.translatesAutoresizingMaskIntoConstraints = false
         
-        categoryLabel.text = category.category
+        categoryLabel.text = category.name
         categoryLabel.font = UIFont(name: "Geist-Regular", size: 14)
         categoryLabel.textColor = .white
         
-        amountLabel.text = String(format: "%0.f$", category.amount)
+        amountLabel.text = String(format: "%0.f$", category.budget)
         amountLabel.font = UIFont(name: "Geist-Regular", size: 12)
         amountLabel.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
         

@@ -17,9 +17,10 @@ final class FolderCollectionCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
-    func configure(category: Column) {
+    func configure(category: Category) {
             if let folder = folder {
                 folder.category = category
+                print("FOLDER OK")
             } else {
                 let view = FolderView(frame: .zero, category: category)
                 view.translatesAutoresizingMaskIntoConstraints = false

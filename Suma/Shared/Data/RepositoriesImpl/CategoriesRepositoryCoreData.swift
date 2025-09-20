@@ -19,7 +19,7 @@ final class CategoriesRepositoryCoreData: CategoriesRepositoryProtocol {
     func listAll() async throws -> [Category] {
         try await container.viewContext.perform {
             let req: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
-            req.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            req.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
             let rows = try self.container.viewContext.fetch(req)
             return rows.map { $0.toDomain() }
         }

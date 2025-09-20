@@ -63,15 +63,27 @@ final class AddCategoryViewModel {
     
     func closeTapped() { onClose?() }
     func addTapped() {
-        let model = Category(id: UUID(), number: "01", name: name, budget: totalAmount, current: 0, gradient: selectedGradient, currency: currency)
-        
         Task {
             do {
+                let count = try await categories.listAll().count
+                let number = String(format: "%02d", count + 1)
+
+                let model = Category(
+                    id: UUID(),
+                    number: number,
+                    name: name,
+                    budget: totalAmount,
+                    current: 0,
+                    gradient: selectedGradient,
+                    currency: currency
+                )
+
                 try await categories.create(model)
+                await MainActor.run { onAdded?() }
             } catch {
-                print("error")
+                print("addTapped error:", error)
             }
         }
-        onAdded?()
     }
+
 }
