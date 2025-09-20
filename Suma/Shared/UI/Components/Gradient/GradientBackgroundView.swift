@@ -47,11 +47,11 @@ final class GradientBackgroundView: UIView {
         glow.frame = bounds
         
         if case .screen = style {
-            let scale: CGFloat = 2.0
-            glow.bounds = CGRect(x: 0, y: 0,
-                               width: bounds.width * scale,
-                               height: bounds.height * scale)
-            glow.position = CGPoint(x: bounds.midX, y: bounds.midY - bounds.height * 0.2)
+//            let scale: CGFloat = 2.0
+//            glow.bounds = CGRect(x: 0, y: 0,
+//                               width: bounds.width * scale,
+//                               height: bounds.height * scale)
+//            glow.position = CGPoint(x: bounds.midX, y: bounds.midY - bounds.height * 0.2)
         }
     }
 }

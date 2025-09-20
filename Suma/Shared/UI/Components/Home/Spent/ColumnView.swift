@@ -8,21 +8,31 @@ import UIKit
 
 struct Column {
     let category: String
-    let amount: String
+    let amount: Double
     let maximum: Int
     let current: Int
+    let badget: Double
+    let number: String
+    var gradient: String
+}
+
+enum ColumnMode {
+    case spent
+    case categories
 }
 
 final class ColumnView: UIView {
     private let column: Column
+    private let mode: ColumnMode
     private let vstack = UIStackView()
     private let maxColumnLabel = UILabel()
     private let fillColumnLabel = UILabel()
     private let categoryLabel = UILabel()
     private let amountLabel = UILabel()
     
-    init(frame: CGRect, column: Column) {
+    init(frame: CGRect, column: Column, mode: ColumnMode) {
         self.column = column
+        self.mode = mode
         super.init(frame: frame)
         setupUI()
     }
@@ -43,7 +53,7 @@ final class ColumnView: UIView {
         fillColumnLabel.backgroundColor = UIColor(red: 0.949, green: 1, blue: 0.345, alpha: 1)
         fillColumnLabel.layer.cornerRadius = 9
         fillColumnLabel.layer.masksToBounds = true
-        let cur = CGFloat(column.current) / CGFloat(column.maximum) * 160
+        let cur = mode == .spent ? CGFloat(column.current) / CGFloat(column.maximum) * 160 : column.amount / column.badget * 160
         fillColumnLabel.heightAnchor.constraint(equalToConstant: cur).isActive = true
         fillColumnLabel.widthAnchor.constraint(equalToConstant: 25).isActive = true
         fillColumnLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +62,7 @@ final class ColumnView: UIView {
         categoryLabel.textColor = UIColor(red: 0.979, green: 0.979, blue: 0.979, alpha: 0.6)
         categoryLabel.font = UIFont(name: "Geist-Regular", size: 12)
         
-        amountLabel.text = "\(column.amount)$"
+        amountLabel.text = (mode == .spent ? "\(column.amount)$" : String(format: "%.1f%%", column.amount / column.badget * 100))
         amountLabel.textColor = UIColor(red: 0.979, green: 0.979, blue: 0.979, alpha: 1)
         amountLabel.font = UIFont(name: "Geist-Semibold", size: 12)
         

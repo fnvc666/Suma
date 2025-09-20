@@ -8,14 +8,37 @@ import Foundation
 import CoreData
 
 final class CategoriesRepositoryCoreData: CategoriesRepositoryProtocol {
+    
     private let container: NSPersistentContainer
+    private var items: [Category] = []
     
     init(container: NSPersistentContainer) {
         self.container = container
     }
-    private var items: [Category] = []
     
-    func listAll() throws -> [Category] {
-        items
+    func listAll() async throws -> [Category] {
+        try await container.viewContext.perform {
+            let req: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
+            req.sortDescriptors = [NSSortDescriptor(key: "number", ascending: false)]
+            let rows = try self.container.viewContext.fetch(req)
+            return rows.map { $0.toDomain() }
+        }
+    }
+    
+    func create(_ category: Category) async throws {
+        try await container.performBackgroundTask { ctx in
+            let obj = CategoryEntity(context: ctx)
+            obj.fill(from: category)
+            try ctx.save()
+            print("Saved CategoryEntity id:", obj.objectID)
+        }
+    }
+    
+    func update(_ category: Category) async throws {
+        //
+    }
+    
+    func delete(_ id: UUID) async throws {
+        //
     }
 }

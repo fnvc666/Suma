@@ -11,6 +11,8 @@ final class FinanceCoordinator: Coordinator {
     private var container: AppContainer
     private var nav: UINavigationController
     
+    private var financeVM: FinanceViewModel?
+    
     init(container: AppContainer, nav: UINavigationController) {
         self.container = container
         self.nav = nav
@@ -18,8 +20,8 @@ final class FinanceCoordinator: Coordinator {
     
     func start() {
         let vm = FinanceViewModel(categories: container.categoriesRepo, transactions: container.transactionRepo)
-        let vc = FinanceViewController(vm: vm)
-        vc.title = "Finance"
+        self.financeVM = vm
+        let vc = FinanceViewController(viewModel: vm)
         nav.setViewControllers([vc], animated: false)
         
         vm.onAddCategory = { [weak self] in
@@ -36,7 +38,17 @@ final class FinanceCoordinator: Coordinator {
     private func startAddCategory() {
         let vm = AddCategoryViewModel(categories: container.categoriesRepo)
         let vc = AddCategoryViewController(viewModel: vm)
-        nav.pushViewController(vc, animated: true)
+        vc.loadViewIfNeeded()
+        vm.onClose = { [weak self] in
+            self?.nav.popViewController(animated: true)
+        }
+        
+        vm.onAdded = { [weak self] in
+            self?.nav.popViewController(animated: true)
+            self?.financeVM?.reload()
+        }
+        
+        self.nav.pushViewController(vc, animated: true)
     }
     
     private func startCategory(categoryId: UUID) {

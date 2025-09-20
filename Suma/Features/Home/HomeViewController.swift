@@ -35,7 +35,7 @@ final class HomeViewController: UIViewController {
         stack.axis = .vertical
         stack.spacing = 24
         stack.isLayoutMarginsRelativeArrangement = true
-        stack.directionalLayoutMargins = .init(top: 0, leading: 20, bottom: 10, trailing: 20)
+        stack.directionalLayoutMargins = .init(top: 0, leading: 20, bottom: 30, trailing: 20)
         
         
         [background, scroll, stack].forEach {
