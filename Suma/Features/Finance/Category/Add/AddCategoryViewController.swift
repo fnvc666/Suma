@@ -54,7 +54,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         form.onCurrencyChanged = { [weak self] currency in
             self?.vm.setCurrency(currency)
         }
-        navBar.onBack = { [weak vm] in vm?.onClose?() }
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
         
         addButton.onAddClicked = { [weak self] in
             self?.vm.addTapped()

@@ -31,6 +31,9 @@ final class CategoryViewModel {
     
     func closeTapped() { onClose?() }
     func editTapped() { onEditCategory?() }
+    func deleteTapped() { // to add
+        onClose?()
+    }
     func editTransactionTapped(id: UUID) { onEditTransaction?(id)}
     func addTransactionTapped() { onAddTransaction?() }
 }

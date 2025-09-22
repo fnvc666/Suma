@@ -9,7 +9,7 @@ import UIKit
 
 final class CategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: CategoryViewModel
-    private let navBar = CustomNavBar(frame: .zero, barTitle: "Edit Category")
+    private let navBar = MultiCustomNavBar(frame: .zero, barTitle: "Food")
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
@@ -28,7 +28,9 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         layout()
         buildComponents()
         
-        navBar.onBack = { [weak vm] in vm?.onClose?() }
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+        navBar.onEdit = { [weak vm] in vm?.editTapped() }
+        navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
     }
     
     override func viewWillAppear(_ animated: Bool) {

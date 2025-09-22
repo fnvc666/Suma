@@ -62,6 +62,7 @@ final class AddCategoryViewModel {
     }
     
     func closeTapped() { onClose?() }
+    
     func addTapped() {
         Task {
             do {
