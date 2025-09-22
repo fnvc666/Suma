@@ -24,7 +24,6 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     init(viewModel: AddCategoryViewModel) {
         self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
-        print("INIT:", Self.self)
     }
     
     required init?(coder: NSCoder) {
@@ -109,9 +108,9 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
         folder.translatesAutoresizingMaskIntoConstraints = false
         
-        gradients.onSelect = { [weak vm] color in
+        gradients.onSelect = { [weak self, weak vm] color in
             vm?.setGradient(color)
-            self.folder.setGradient(color)
+            self?.folder.setGradient(color)
         }
         
         headerHStack.addArrangedSubview(folder)
@@ -146,7 +145,4 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(25, after: headerHStack)
     }
-    
-    deinit { print("DEINIT:", Self.self) }
-
 }
