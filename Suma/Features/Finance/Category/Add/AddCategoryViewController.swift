@@ -9,7 +9,7 @@ import UIKit
 
 class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: AddCategoryViewModel
-    private let navBar = CustomNavBar()
+    private let navBar = CustomNavBar(frame: .zero, barTitle: "Add Category")
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
@@ -24,6 +24,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     init(viewModel: AddCategoryViewModel) {
         self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
+        print("INIT:", Self.self)
     }
     
     required init?(coder: NSCoder) {
@@ -145,4 +146,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(25, after: headerHStack)
     }
+    
+    deinit { print("DEINIT:", Self.self) }
+
 }

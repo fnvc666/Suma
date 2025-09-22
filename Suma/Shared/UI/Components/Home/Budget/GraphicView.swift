@@ -153,10 +153,6 @@ final class GraphicView: UIView {
         dotLayer.frame = bounds
         dotLayer.path = UIBezierPath(ovalIn: dotRect).cgPath
         
-        print("step: \(stepX)")
-        print("maxX: \(maxX)")
-        print("maxY: \(maxY)")
-        
         path.move(to: CGPoint(x: maxX, y: maxY))
         path.addLine(to: CGPoint(x: maxX, y: bounds.maxY))
         return path

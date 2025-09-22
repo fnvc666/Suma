@@ -104,7 +104,7 @@ class FinanceViewController: UIViewController {
         let addCategoryButton = AddNewCategoryButton()
         grid = CategoryGridComponent(items: categories, columns: 2)
         grid.onSelect = { [weak self] categoryId in
-//            self?.vm.categoryTapped(categoryId: categoryId)
+            self?.vm.categoryTapped(categoryId: categoryId)
         }
         
         addCategoryButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
@@ -123,11 +123,9 @@ class FinanceViewController: UIViewController {
     
     @objc private func tap() {
         vm.addCategoryTapped()
-        print("tapped")
     }
     
     private func updateGrid(with items: [Category]) {
-        print("UPDATE")
         grid?.reload(with: items)
     }
 }

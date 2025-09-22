@@ -10,9 +10,12 @@ final class CustomNavBar: UIView {
     private let backButton = UIButton()
     private let titleLabel = UILabel()
     
+    var barTitle: String
+    
     var onBack: (() -> Void)?
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, barTitle: String) {
+        self.barTitle = barTitle
         super.init(frame: frame)
         setupUI()
     }
@@ -26,7 +29,7 @@ final class CustomNavBar: UIView {
         backButton.tintColor = .white
         backButton.addTarget(self, action: #selector(tapBack), for: .touchUpInside)
         
-        titleLabel.text = "Add Category"
+        titleLabel.text = barTitle
         titleLabel.font = UIFont(name: "Geist-Regular", size: 24)
         titleLabel.textColor = .white
         

@@ -69,7 +69,6 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     }
     
     @objc private func toggle() {
-        print("clicked")
         isExpanded.toggle()
         if isExpanded { tableView.isHidden = false }
         let rows = currencies.count

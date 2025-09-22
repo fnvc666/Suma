@@ -20,7 +20,6 @@ final class FolderCollectionCell: UICollectionViewCell {
     func configure(category: Category) {
             if let folder = folder {
                 folder.category = category
-                print("FOLDER OK")
             } else {
                 let view = FolderView(frame: .zero, category: category)
                 view.translatesAutoresizingMaskIntoConstraints = false

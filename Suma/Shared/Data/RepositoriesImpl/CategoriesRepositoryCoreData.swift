@@ -30,7 +30,6 @@ final class CategoriesRepositoryCoreData: CategoriesRepositoryProtocol {
             let obj = CategoryEntity(context: ctx)
             obj.fill(from: category)
             try ctx.save()
-            print("Saved CategoryEntity id:", obj.objectID)
         }
     }
     
