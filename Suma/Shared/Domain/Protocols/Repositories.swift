@@ -13,6 +13,7 @@ protocol TransactionsRepositoryProtocol {
 
 protocol CategoriesRepositoryProtocol {
     func listAll() async throws -> [Category]
+    func get(by id: UUID) async throws -> Category
     func create(_ category: Category) async throws
     func update(_ category: Category) async throws
     func delete(_ id: UUID) async throws

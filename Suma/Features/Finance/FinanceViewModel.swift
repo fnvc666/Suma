@@ -18,7 +18,7 @@ final class FinanceViewModel {
     var fetchCategory: [Category] = []
     
     var onAddCategory: (() -> Void)?
-    var onOpenCategory: ((UUID) -> Void)?
+    var onOpenCategory: ((UUID, Category?) -> Void)?
     var onFetch: (([Category]) -> Void)? {
         didSet {
             DispatchQueue.main.async {
@@ -31,7 +31,9 @@ final class FinanceViewModel {
     func viewDidLoad() {}
     
     func addCategoryTapped() { onAddCategory?() }
-    func categoryTapped(categoryId: UUID) { onOpenCategory?(categoryId) }
+    func categoryTapped(categoryId: UUID) {
+        let snap = fetchCategory.first { $0.id == categoryId}
+        onOpenCategory?(categoryId, snap) }
     
     func reload() { Task { await load()} }
     func load() async {

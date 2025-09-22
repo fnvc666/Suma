@@ -28,8 +28,8 @@ final class FinanceCoordinator: Coordinator {
             self?.startAddCategory()
         }
         
-        vm.onOpenCategory = { [weak self] categoryId in
-            self?.startCategory(categoryId: categoryId)
+        vm.onOpenCategory = { [weak self] id, snap in
+            self?.startCategory(categoryId: id, snapshot: snap)
         }
         
         
@@ -51,9 +51,8 @@ final class FinanceCoordinator: Coordinator {
         self.nav.pushViewController(vc, animated: true)
     }
     
-    private func startCategory(categoryId: UUID) {
-        let flow = CategoryCoordinator(container: container, nav: nav, categoryId: categoryId)
-        
+    private func startCategory(categoryId: UUID, snapshot: Category?) {
+        let flow = CategoryCoordinator(container: container, nav: nav, categoryId: categoryId, snapshot: snapshot)
         children.append(flow)
         flow.onFinish = { [weak self, weak flow] in
             guard let self, let flow else { return }

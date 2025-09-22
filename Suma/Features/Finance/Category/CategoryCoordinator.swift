@@ -13,18 +13,20 @@ final class CategoryCoordinator: Coordinator {
     private let container: AppContainer
     private let nav: UINavigationController
     private let categoryId: UUID
+    private let snapshot: Category?
     
-    init(container: AppContainer, nav: UINavigationController, categoryId: UUID) {
+    init(container: AppContainer, nav: UINavigationController, categoryId: UUID, snapshot: Category?) {
         self.container = container
         self.nav = nav
         self.categoryId = categoryId
+        self.snapshot = snapshot
     }
     
     func start() {
         let vm = CategoryViewModel(
             categoryId: categoryId,
             categories: container.categoriesRepo,
-            transactions: container.transactionRepo
+            transactions: container.transactionRepo, initial: snapshot
             )
         let vc = CategoryViewController(viewModel: vm)
         vc.title = "Category"
@@ -53,9 +55,13 @@ final class CategoryCoordinator: Coordinator {
     }
     
     private func startEditCategory() {
-        let vm = EditCategoryViewModel(categoryId: categoryId, categories: container.categoriesRepo)
+        let vm = EditCategoryViewModel(categoryId: categoryId, categories: container.categoriesRepo, initial: snapshot)
         let vc = EditCategoryViewController(viewModel: vm)
         nav.pushViewController(vc, animated: true)
+        
+        vm.onClose = { [weak self] in
+            self?.nav.popViewController(animated: true)
+        }
     }
     
     private func startAddTransaction() {
