@@ -9,7 +9,7 @@ import UIKit
 
 class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: AddCategoryViewModel
-    private let navBar = CustomNavBar()
+    private let navBar = CustomNavBar(frame: .zero, barTitle: "Add Category")
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
@@ -54,7 +54,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         form.onCurrencyChanged = { [weak self] currency in
             self?.vm.setCurrency(currency)
         }
-        navBar.onBack = { [weak vm] in vm?.onClose?() }
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
         
         addButton.onAddClicked = { [weak self] in
             self?.vm.addTapped()
@@ -108,9 +108,9 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
         folder.translatesAutoresizingMaskIntoConstraints = false
         
-        gradients.onSelect = { [weak vm] color in
+        gradients.onSelect = { [weak self, weak vm] color in
             vm?.setGradient(color)
-            self.folder.setGradient(color)
+            self?.folder.setGradient(color)
         }
         
         headerHStack.addArrangedSubview(folder)

@@ -63,4 +63,13 @@ final class FormSection: UIView {
         }
     }
     
+    func fill(from category: Category) {
+        customNameField.name = category.name
+        
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 2
+        f.decimalSeparator = "."
+        customAmountField.name = (f.string(from: category.budget as NSNumber) ?? "")
+    }
 }

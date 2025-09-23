@@ -8,7 +8,7 @@ import UIKit
 
 final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var onSelect: ((Int) -> Void)?
+    var onSelect: ((UUID) -> Void)?
     
     var items: [Category] {
         didSet {
@@ -82,7 +82,6 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
             for: indexPath
         ) as! FolderCollectionCell
         cell.configure(category: items[indexPath.item])
-        print("cell", indexPath.item, items[indexPath.item].number)
         return cell
     }
     
@@ -107,7 +106,7 @@ final class CategoryGridComponent: UIView, UICollectionViewDataSource, UICollect
     
     // MARK: - Delegate
     func collectionView(_ cv: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        onSelect?(indexPath.item)
+        onSelect?(items[indexPath.item].id)
     }
 }
 
