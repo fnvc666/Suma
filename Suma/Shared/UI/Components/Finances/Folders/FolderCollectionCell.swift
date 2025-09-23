@@ -20,6 +20,10 @@ final class FolderCollectionCell: UICollectionViewCell {
     func configure(category: Category) {
             if let folder = folder {
                 folder.category = category
+                folder.setName(category.name)
+                folder.setAmount(String(format: "%.f", category.budget))
+                folder.setGradient(category.gradient)
+                folder.setNumber(category.number)
             } else {
                 let view = FolderView(frame: .zero, category: category)
                 view.translatesAutoresizingMaskIntoConstraints = false
