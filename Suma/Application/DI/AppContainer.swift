@@ -20,7 +20,7 @@ final class AppContainer {
         persistent.loadPersistentStores { _, error in
             precondition(error == nil, "CD load error: \(error!)")
         }
-        persistent.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        persistent.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
         persistent.viewContext.automaticallyMergesChangesFromParent = true
         
         // Repositories (CoreData impl)

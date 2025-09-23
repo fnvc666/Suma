@@ -9,6 +9,7 @@ import UIKit
 final class CategoryCoordinator: Coordinator {
     var children: [Coordinator] = []
     var onFinish: (() -> Void)?
+    var onReload: (() -> Void)?
     
     private let container: AppContainer
     private let nav: UINavigationController
@@ -29,10 +30,6 @@ final class CategoryCoordinator: Coordinator {
             transactions: container.transactionRepo, initial: snapshot
             )
         let vc = CategoryViewController(viewModel: vm)
-        vc.title = "Category"
-//        vc.onPopped { [weak self] in
-//            self?.onFinish?()
-//        }
         
         vm.onClose = { [weak self] in
             self?.nav.popViewController(animated: true)
@@ -61,6 +58,11 @@ final class CategoryCoordinator: Coordinator {
         
         vm.onClose = { [weak self] in
             self?.nav.popViewController(animated: true)
+        }
+        
+        vm.onSaved = { [weak self] in
+            self?.nav.popViewController(animated: true)
+            self?.onReload?()
         }
     }
     

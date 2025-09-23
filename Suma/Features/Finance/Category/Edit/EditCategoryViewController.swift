@@ -15,7 +15,7 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
     private let scroll = UIScrollView()
     private let stack = UIStackView()
     private let headerHStack = UIStackView()
-    private let addButton = AddCategoryButton()
+    private let saveButton = SaveChangesButton()
     private let folder: FolderView
     let form = FormSection()
     let gradients = GradientGridComponent()
@@ -61,6 +61,9 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
             self?.folder.setGradient(color)
         }
         
+        saveButton.onSaveClicked = { [weak self] in
+            self?.vm.saveTapped()
+        }
         navBar.onBack = { [weak vm] in vm?.closeTapped() }
         
         vm.viewDidLoad()
@@ -125,7 +128,7 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
         headerHStack.addArrangedSubview(spacer)
         headerHStack.addArrangedSubview(gradients)
         
-        [navBar, headerHStack, form, addButton].forEach {
+        [navBar, headerHStack, form, saveButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -143,10 +146,10 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
             form.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             form.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
             
-            addButton.topAnchor.constraint(equalTo: form.bottomAnchor, constant: 24),
-            addButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
-            addButton.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
-            addButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor),
+            saveButton.topAnchor.constraint(equalTo: form.bottomAnchor, constant: 24),
+            saveButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            saveButton.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            saveButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor),
             
         ])
         

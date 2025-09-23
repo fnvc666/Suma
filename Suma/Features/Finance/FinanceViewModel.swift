@@ -31,14 +31,17 @@ final class FinanceViewModel {
     func viewDidLoad() {}
     
     func addCategoryTapped() { onAddCategory?() }
+    
     func categoryTapped(categoryId: UUID) {
         let snap = fetchCategory.first { $0.id == categoryId}
         onOpenCategory?(categoryId, snap) }
     
     func reload() { Task { await load()} }
+    
     func load() async {
         do {
             let categories = try await self.categories.listAll()
+            print("CATEGORIES: \(categories)")
             self.fetchCategory = categories
             await MainActor.run{ onFetch?(categories) }
         } catch {

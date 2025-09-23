@@ -12,6 +12,7 @@ final class FinanceCoordinator: Coordinator {
     private var nav: UINavigationController
     
     private var financeVM: FinanceViewModel?
+    private var financeVC: FinanceViewController?
     
     init(container: AppContainer, nav: UINavigationController) {
         self.container = container
@@ -52,11 +53,16 @@ final class FinanceCoordinator: Coordinator {
     }
     
     private func startCategory(categoryId: UUID, snapshot: Category?) {
+        print("\n \n \n START CATEGORY", categoryId)
+        print(snapshot)
         let flow = CategoryCoordinator(container: container, nav: nav, categoryId: categoryId, snapshot: snapshot)
         children.append(flow)
         flow.onFinish = { [weak self, weak flow] in
             guard let self, let flow else { return }
             self.children.removeAll { $0 === flow }
+        }
+        flow.onReload = { [weak self] in
+            self?.financeVM?.reload()
         }
         flow.start()
     }

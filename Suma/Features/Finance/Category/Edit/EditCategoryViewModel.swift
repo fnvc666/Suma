@@ -32,7 +32,26 @@ final class EditCategoryViewModel {
     }
     
     func closeTapped() { onClose?() }
-    func saveTapped() { onSaved?() }
+    func saveTapped() {
+        Task {
+            do {
+                let model = Category(
+                    id: categoryId,
+                    number: draft.number,
+                    name: draft.name,
+                    budget: draft.budget,
+                    current: draft.current,
+                    gradient: draft.gradient,
+                    currency: draft.currency)
+                
+                try await categories.update(model)
+                print("SAVED MODEL: ", model)
+                await MainActor.run { onSaved?() }
+            } catch {
+                print("saveTapped error:", error)
+            }
+        }
+    }
     
     private func fetchCategory() {
         Task {
