@@ -8,7 +8,7 @@ import UIKit
 
 final class CurrencySection: UIView {
     private let label = UILabel()
-    private let picker = CurrencyPickerView()
+    let picker = CurrencyPickerView()
     
     var onCurrencyChanged: ((String) -> Void)?
     
@@ -44,4 +44,8 @@ final class CurrencySection: UIView {
             picker.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
+    
+    func setCurrency(_ code: String) {
+            picker.setCurrency(code)
+        }
 }

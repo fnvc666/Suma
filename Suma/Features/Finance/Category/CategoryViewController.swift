@@ -27,10 +27,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         vm.viewDidLoad()
         layout()
         buildComponents()
-        
-        navBar.onBack = { [weak vm] in vm?.closeTapped() }
-        navBar.onEdit = { [weak vm] in vm?.editTapped() }
-        navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
+        setupCallbacks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,5 +85,11 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             navBar.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
+    }
+    
+    private func setupCallbacks() {
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+        navBar.onEdit = { [weak vm] in vm?.editTapped() }
+        navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
     }
 }

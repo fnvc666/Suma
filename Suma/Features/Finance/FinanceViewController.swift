@@ -36,13 +36,9 @@ class FinanceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.onFetch = { [weak self] data in
-            self?.categories = data
-            self?.updateGrid(with: data)
-        }
-        categories = vm.fetchCategory
         layout()
         buildComponents()
+        setupCallbacks()
         
         navigationItem.backButtonDisplayMode = .minimal
         navigationController?.navigationBar.tintColor = .white
@@ -103,9 +99,6 @@ class FinanceViewController: UIViewController {
         let categoriesStats = CategoriesStatsView()
         let addCategoryButton = AddNewCategoryButton()
         grid = CategoryGridComponent(items: categories, columns: 2)
-        grid.onSelect = { [weak self] categoryId in
-            self?.vm.categoryTapped(categoryId: categoryId)
-        }
         
         addCategoryButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
         
@@ -127,5 +120,18 @@ class FinanceViewController: UIViewController {
     
     private func updateGrid(with items: [Category]) {
         grid?.reload(with: items)
+    }
+    
+    private func setupCallbacks() {
+        vm.onFetch = { [weak self] data in
+            self?.categories = data
+            self?.updateGrid(with: data)
+        }
+        
+        grid.onSelect = { [weak self] categoryId in
+            self?.vm.categoryTapped(categoryId: categoryId)
+        }
+        
+        categories = vm.fetchCategory
     }
 }

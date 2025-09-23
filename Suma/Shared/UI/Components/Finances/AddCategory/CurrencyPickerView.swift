@@ -14,6 +14,7 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     private var tableHeight: NSLayoutConstraint!
     
     private let currencies = [("USD", "usdFlagIcon"), ("EUR", "eurFlagIcon"), ("PLN", "plnFlagIcon")]
+    private(set) var selectedCode: String = "USD"
     
     var onCurrencySelected: ((String) -> Void)?
     
@@ -30,7 +31,7 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     private func setupUI() {
         var config = UIButton.Configuration.plain()
         config.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-        config.attributedTitle = AttributedString("USD ▾", attributes: AttributeContainer([
+        config.attributedTitle = AttributedString("\(selectedCode) ▾", attributes: AttributeContainer([
             .font: UIFont(name: "Geist-Medium", size: 14)!,
             .foregroundColor: UIColor.white
         ]))
@@ -90,6 +91,7 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let (currency, icon) = currencies[indexPath.row]
+        selectedCode = currency
         button.configuration = makeButtonConfig(title: "\(currency) ▾", imageName: icon)
         toggle()
         
@@ -114,6 +116,16 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
         
         return config
     }
+    
+    func setCurrency(_ code: String) {
+            guard let index = currencies.firstIndex(where: { $0.0 == code }) else { return }
+            selectedCode = code
+        
+            let pair = currencies[index]
+            button.configuration = makeButtonConfig(title: "\(pair.0) ▾", imageName: pair.1)
+
+            tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
+        }
 
 }
 

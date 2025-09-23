@@ -53,8 +53,6 @@ final class FinanceCoordinator: Coordinator {
     }
     
     private func startCategory(categoryId: UUID, snapshot: Category?) {
-        print("\n \n \n START CATEGORY", categoryId)
-        print(snapshot)
         let flow = CategoryCoordinator(container: container, nav: nav, categoryId: categoryId, snapshot: snapshot)
         children.append(flow)
         flow.onFinish = { [weak self, weak flow] in
