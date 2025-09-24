@@ -9,7 +9,7 @@ import UIKit
 
 final class CategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: CategoryViewModel
-    private let navBar = MultiCustomNavBar(frame: .zero, barTitle: "Food")
+    private let navBar = MultiCustomNavBar(frame: .zero, barTitle: "Categories")
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
@@ -107,7 +107,9 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     
     private func rednerComponents() {
         vm.onFetch = { [weak self] category in
+            self?.navBar.setBatTitle(category.name)
             self?.totalAmount.render(category.current, category.currency)
+            self?.spentThisMonth.render(category.current, category.budget, category.currency, category.gradient)
             print(category)
         }
     }

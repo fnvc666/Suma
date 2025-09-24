@@ -76,6 +76,10 @@ final class MultiCustomNavBar: UIView {
         moreButton.menu = UIMenu(children: [edit, delete])
     }
     
+    func setBatTitle(_ title: String) {
+        titleLabel.text = title
+    }
+    
     @objc private func tapBack() {
         onBack?()
     }
