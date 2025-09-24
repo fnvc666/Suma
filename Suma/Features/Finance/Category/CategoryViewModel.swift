@@ -12,6 +12,14 @@ final class CategoryViewModel {
     private let transactions: TransactionsRepositoryProtocol
     private(set) var category: Category
     
+    var onFetch: ((Category) -> Void)?
+    var onClose: (() -> Void)?
+    var onDelete: (() -> Void)?
+    var onEditCategory: (() -> Void)?
+    var onAddCategory: (() -> Void)?
+    var onAddTransaction: (() -> Void)?
+    var onEditTransaction: ((UUID) -> Void)?
+    
     init(categoryId: UUID, categories: CategoriesRepositoryProtocol, transactions: TransactionsRepositoryProtocol, initial: Category?) {
         self.categoryId = categoryId
         self.categories = categories
@@ -19,32 +27,28 @@ final class CategoryViewModel {
         self.category = initial ?? Category(id: categoryId, number: "", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD")
     }
     
-    var onFetch: ((Category) -> Void)?
-    // Outside navigation
-    var onClose: (() -> Void)?
-    var onEditCategory: (() -> Void)?
-    var onAddCategory: (() -> Void)?
-    var onAddTransaction: (() -> Void)?
-    var onEditTransaction: ((UUID) -> Void)?
-    
-    // Inputs <- View
     func viewDidLoad() {
-        print("INIT:", category)
-        onFetch?(category)
+        Task { @MainActor in onFetch?(category) }
         
         Task {
             if let actual = try? await categories.get(by: categoryId), actual != category {
                 category = actual
-                onFetch?(actual)
-                print("FETCH:", category)
+                await MainActor.run { onFetch?(actual) }
             }
         }
     }
     
     func closeTapped() { onClose?() }
     func editTapped() { onEditCategory?() }
-    func deleteTapped() { // to add
-        onClose?()
+    func deleteTapped() {
+        Task {
+            do {
+                try await categories.delete(categoryId)
+                await MainActor.run { onDelete?() }
+            } catch {
+                print("error during deleting category: \(error)")
+            }
+        }
     }
     func editTransactionTapped(id: UUID) { onEditTransaction?(id)}
     func addTransactionTapped() { onAddTransaction?() }

@@ -70,6 +70,17 @@ final class CategoriesRepositoryCoreData: CategoriesRepositoryProtocol {
 
     
     func delete(_ id: UUID) async throws {
-        //
+        try await container.performBackgroundTask { ctx in
+            let req: NSFetchRequest<CategoryEntity> = CategoryEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            req.fetchLimit = 1
+            
+            guard let obj = try ctx.fetch(req).first else {
+                throw NSError(domain: "CategoriesRepository", code: 404)
+            }
+            
+            ctx.delete(obj)
+            if ctx.hasChanges { try ctx.save() }
+        }
     }
 }

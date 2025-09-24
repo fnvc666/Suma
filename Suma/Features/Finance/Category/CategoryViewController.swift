@@ -14,6 +14,8 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
     private var stack = UIStackView()
+    private let totalAmount = TotalAmountView()
+    private let spentThisMonth = SpentThisMonthView()
     
     init(viewModel: CategoryViewModel) {
         self.vm = viewModel
@@ -24,10 +26,11 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.viewDidLoad()
         layout()
         buildComponents()
         setupCallbacks()
+        rednerComponents()
+        vm.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,7 +79,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             $0.removeFromSuperview()
         }
         
-        [navBar].forEach {
+        [navBar, totalAmount, spentThisMonth].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -84,12 +87,28 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            totalAmount.leadingAnchor.constraint(equalTo: stack.leadingAnchor),
+            totalAmount.trailingAnchor.constraint(equalTo: stack.trailingAnchor),
+            
+            spentThisMonth.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            spentThisMonth.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
+        
+        stack.setCustomSpacing(32, after: navBar)
+        stack.setCustomSpacing(36, after: totalAmount)
     }
     
     private func setupCallbacks() {
         navBar.onBack = { [weak vm] in vm?.closeTapped() }
         navBar.onEdit = { [weak vm] in vm?.editTapped() }
         navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
+    }
+    
+    private func rednerComponents() {
+        vm.onFetch = { [weak self] category in
+            self?.totalAmount.render(category.current, category.currency)
+            print(category)
+        }
     }
 }

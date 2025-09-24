@@ -10,6 +10,7 @@ final class CategoryCoordinator: Coordinator {
     var children: [Coordinator] = []
     var onFinish: (() -> Void)?
     var onReload: (() -> Void)?
+    var onDelete: (() -> Void)?
     
     private let container: AppContainer
     private let nav: UINavigationController
@@ -38,6 +39,11 @@ final class CategoryCoordinator: Coordinator {
         
         vm.onEditCategory = { [weak self] in
             self?.startEditCategory()
+        }
+        
+        vm.onDelete = { [weak self] in
+            self?.onReload?()
+            self?.nav.popViewController(animated: true)
         }
         
         vm.onAddTransaction = { [weak self] in
