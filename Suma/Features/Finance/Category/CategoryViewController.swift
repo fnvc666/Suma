@@ -14,8 +14,10 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
     private var stack = UIStackView()
+    
     private let totalAmount = TotalAmountView()
     private let spentThisMonth = SpentThisMonthView()
+    private let actionsView = ActionsView()
     
     init(viewModel: CategoryViewModel) {
         self.vm = viewModel
@@ -79,7 +81,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             $0.removeFromSuperview()
         }
         
-        [navBar, totalAmount, spentThisMonth].forEach {
+        [navBar, totalAmount, spentThisMonth, actionsView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -93,16 +95,21 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             
             spentThisMonth.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             spentThisMonth.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            actionsView.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            actionsView.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
         
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(36, after: totalAmount)
+        stack.setCustomSpacing(24, after: spentThisMonth)
     }
     
     private func setupCallbacks() {
         navBar.onBack = { [weak vm] in vm?.closeTapped() }
         navBar.onEdit = { [weak vm] in vm?.editTapped() }
         navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
+        actionsView.onAddTransaction = { [weak vm] in vm?.addTransactionTapped() }
     }
     
     private func rednerComponents() {
