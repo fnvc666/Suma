@@ -22,10 +22,12 @@ final class AddTransactionViewModel {
     
     // Outside navigation
     var onClose: (() -> Void)?
-    var onSaved: (() -> Void)?
+    var onAdded: (() -> Void)?
     
-    func savedTapped() { onSaved?() }
     func closeTapped() { onClose?() }
+    func addTapped() {
+        onAdded?()
+    }
     
     func setType(_ type: String) {
         self.transactionType = type

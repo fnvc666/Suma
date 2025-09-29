@@ -33,7 +33,7 @@ final class TransactionCoordinator: Coordinator {
             self?.nav.popViewController(animated: true)
             self?.onFinish?()
         }
-        vm.onSaved = { [weak self] in self?.close() }
+        vm.onAdded = { [weak self] in self?.close() }
         nav.pushViewController(vc, animated: true)
     }
     

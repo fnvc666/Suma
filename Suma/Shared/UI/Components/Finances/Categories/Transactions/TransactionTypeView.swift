@@ -56,7 +56,7 @@ final class TransactionTypeView: UIView {
         [spentButton, receivedButton].forEach {
             $0.isSelected.toggle()
             $0.configureColor()
-            if $0.isSelected { onSetTransactionType?($0.titleText ?? "") }
+            if $0.isSelected { onSetTransactionType?($0.title.text ?? "") }
         }
     }
 }
@@ -64,8 +64,8 @@ final class TransactionTypeView: UIView {
 final class TransactionTypeButton: UIButton {
     private let hstack = UIStackView()
     private let spacer = UIView()
-    private let title = UILabel()
     private let icon = UIImageView()
+    let title = UILabel()
     
     var titleText: String?
     var iconName: String?

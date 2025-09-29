@@ -15,6 +15,7 @@ final class TransactionFormSectionView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        wireCallbacks()
     }
     
     var onPaymentMethodChanged: ((String) -> Void)?

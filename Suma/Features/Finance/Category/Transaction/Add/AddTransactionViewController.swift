@@ -107,28 +107,15 @@ class AddTransactionViewController: UIViewController {
     }
     
     private func setupCallbacks() {
-        navBar.onBack = { [weak vm] in
-            vm?.closeTapped()
-        }
-        
-        transactionType.onSetTransactionType = { [weak vm] type in
-            vm?.setType(type)
-        }
-        
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+        transactionType.onSetTransactionType = { [weak vm] type in vm?.setType(type) }
+        formSection.onLocationChanged = { [weak vm] location in vm?.setLocation(location) }
+        formSection.onPaymentMethodChanged = { [weak vm] method in vm?.setPaymentMethods(method) }
+        formSection.onCurrencyChanged = { [weak vm] currency in vm?.setCurrency(currency) }
+        addTransactionButton.onClicked = { [weak vm] in vm?.addTapped() }
         amountView.onAmountChanged = { [weak vm] amount in
-            vm?.setAmount(amount ?? 0)
-        }
-        
-        formSection.onLocationChanged = { [weak vm] location in
-            vm?.setLocation(location)
-        }
-        
-        formSection.onPaymentMethodChanged = { [weak vm] method in
-            vm?.setPaymentMethods(method)
-        }
-        
-        formSection.onCurrencyChanged = { [weak vm] currency in
-            vm?.setCurrency(currency)
+            guard let amount = amount else { return }
+            vm?.setAmount(amount)
         }
     }
 }
