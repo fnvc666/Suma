@@ -6,8 +6,8 @@
 //
 import UIKit
 
-final class CustomTabelCell: UITableViewCell {
-    static let reuseIdentifier = "CustomTabelCell"
+final class CustomTableCell: UITableViewCell {
+    static let reuseIdentifier = "CustomTableCell"
     private let title = UILabel()
     private let flag = UIImageView()
     
@@ -46,6 +46,5 @@ final class CustomTabelCell: UITableViewCell {
             title.centerYAnchor.constraint(equalTo: centerYAnchor),
             title.leadingAnchor.constraint(equalTo: flag.trailingAnchor, constant: 10),
         ])
-        
     }
 }

@@ -6,14 +6,16 @@
 //
 import UIKit
 
-final class AddCategoryButton: UIView {
+final class YellowButton: UIView {
     
-    var onAddClicked: (() -> Void)?
+    var onClicked: (() -> Void)?
     
+    var title: String = ""
     private let hstack = UIStackView()
     private let button = UIButton()
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, title: String) {
+        self.title = title
         super.init(frame: frame)
         setupUI()
     }
@@ -28,7 +30,7 @@ final class AddCategoryButton: UIView {
         hstack.translatesAutoresizingMaskIntoConstraints = false
         
         var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString("Add category", attributes: AttributeContainer([
+        config.attributedTitle = AttributedString(title, attributes: AttributeContainer([
             .font: UIFont(name: "Geist-Medium", size: 14)!,
             .foregroundColor: UIColor.black
         ]))
@@ -57,11 +59,11 @@ final class AddCategoryButton: UIView {
             hstack.trailingAnchor.constraint(equalTo: trailingAnchor),
             hstack.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            button.widthAnchor.constraint(lessThanOrEqualTo: hstack.widthAnchor, multiplier: 0.35)
+            button.widthAnchor.constraint(lessThanOrEqualTo: hstack.widthAnchor, multiplier: 0.45)
         ])
     }
     
     @objc private func clicked() {
-        onAddClicked?()
+        onClicked?()
     }
 }

@@ -11,6 +11,8 @@ final class TransactionTypeView: UIView {
     private let spentButton = TransactionTypeButton()
     private let receivedButton = TransactionTypeButton()
     
+    var onSetTransactionType: ((String) -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -54,6 +56,7 @@ final class TransactionTypeView: UIView {
         [spentButton, receivedButton].forEach {
             $0.isSelected.toggle()
             $0.configureColor()
+            if $0.isSelected { onSetTransactionType?($0.titleText ?? "") }
         }
     }
 }

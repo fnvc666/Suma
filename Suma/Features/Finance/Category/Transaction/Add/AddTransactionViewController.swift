@@ -16,6 +16,9 @@ class AddTransactionViewController: UIViewController {
     private let stack = UIStackView()
     
     private let transactionType = TransactionTypeView()
+    private let amountView = TransactionAmountView()
+    private let formSection = TransactionFormSectionView()
+    private let addTransactionButton = YellowButton(frame: .zero, title: "Add transaction")
     
     init(viewModel: AddTransactionViewModel) {
         self.vm = viewModel
@@ -59,10 +62,10 @@ class AddTransactionViewController: UIViewController {
             scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            stack.topAnchor.constraint(equalTo: scroll.safeAreaLayoutGuide.topAnchor),
-            stack.leadingAnchor.constraint(equalTo: scroll.safeAreaLayoutGuide.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: scroll.safeAreaLayoutGuide.trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: scroll.safeAreaLayoutGuide.bottomAnchor),
+            stack.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor),
+            stack.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor),
             
             stack.widthAnchor.constraint(equalTo: scroll.frameLayoutGuide.widthAnchor),
         ])
@@ -74,7 +77,7 @@ class AddTransactionViewController: UIViewController {
             $0.removeFromSuperview()
         }
         
-        [navBar, transactionType].forEach {
+        [navBar, transactionType, amountView, formSection, addTransactionButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -85,14 +88,47 @@ class AddTransactionViewController: UIViewController {
             
             transactionType.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             transactionType.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            amountView.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            amountView.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            formSection.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            formSection.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            addTransactionButton.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            addTransactionButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            addTransactionButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor),
         ])
         
         stack.setCustomSpacing(32, after: navBar)
+        stack.setCustomSpacing(24, after: transactionType)
+        stack.setCustomSpacing(24, after: amountView)
+        stack.setCustomSpacing(24, after: formSection)
     }
     
     private func setupCallbacks() {
         navBar.onBack = { [weak vm] in
             vm?.closeTapped()
+        }
+        
+        transactionType.onSetTransactionType = { [weak vm] type in
+            vm?.setType(type)
+        }
+        
+        amountView.onAmountChanged = { [weak vm] amount in
+            vm?.setAmount(amount ?? 0)
+        }
+        
+        formSection.onLocationChanged = { [weak vm] location in
+            vm?.setLocation(location)
+        }
+        
+        formSection.onPaymentMethodChanged = { [weak vm] method in
+            vm?.setPaymentMethods(method)
+        }
+        
+        formSection.onCurrencyChanged = { [weak vm] currency in
+            vm?.setCurrency(currency)
         }
     }
 }
