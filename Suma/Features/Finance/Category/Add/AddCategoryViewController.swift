@@ -15,7 +15,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let scroll = UIScrollView()
     private let stack = UIStackView()
     private let headerHStack = UIStackView()
-    private let addButton = AddCategoryButton()
+    private let addButton = YellowButton(frame: .zero, title: "Add category")
     private let folder = FolderView(frame: .zero, category: .init(id: UUID(), number: "99", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD"))
     let form = FormSection()
     let gradients = GradientGridComponent()
@@ -40,25 +40,7 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         layout()
         buildComponents()
-        
-        form.onNameChanged = { [weak self] text in
-            self?.vm.setName(text)
-            self?.folder.setName(text)
-        }
-        
-        form.onAmountChanged = { [weak self] amount in
-            self?.vm.setAmount(amount)
-            self?.folder.setAmount(amount)
-        }
-        
-        form.onCurrencyChanged = { [weak self] currency in
-            self?.vm.setCurrency(currency)
-        }
-        navBar.onBack = { [weak vm] in vm?.closeTapped() }
-        
-        addButton.onAddClicked = { [weak self] in
-            self?.vm.addTapped()
-        }
+        setupCallbacks()
     }
     
     private func layout() {
@@ -144,5 +126,21 @@ class AddCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
         
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(25, after: headerHStack)
+    }
+    
+    private func setupCallbacks() {
+        form.onNameChanged = { [weak self] text in
+            self?.vm.setName(text)
+            self?.folder.setName(text)
+        }
+        
+        form.onAmountChanged = { [weak self] amount in
+            self?.vm.setAmount(amount)
+            self?.folder.setAmount(amount)
+        }
+        
+        form.onCurrencyChanged = { [weak self] currency in self?.vm.setCurrency(currency) }
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+        addButton.onClicked = { [weak self] in self?.vm.addTapped() }
     }
 }

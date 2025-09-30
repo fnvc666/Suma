@@ -13,25 +13,32 @@ final class EditCategoryViewModel {
     
     var category: Category?
     
-    init(categoryId: UUID, categories: CategoriesRepositoryProtocol, initial: Category?) {
-        self.categoryId = categoryId
-        self.categories = categories
-        self.draft = initial ?? Category(id: categoryId, number: "00", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD")
-    }
-    
     var onFetch: ((Category) -> Void)?
-    
-    // Outside navigation
     var onClose: (() -> Void)?
     var onSaved: (() -> Void)?
     
-    // Inputs <- View
+    init(categoryId: UUID, categories: CategoriesRepositoryProtocol, initial: Category?) {
+        self.categoryId = categoryId
+        self.categories = categories
+        self.draft = initial ?? Category(id: categoryId, number: "00", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "test")
+    }
+    
     @MainActor
     func viewDidLoad() {
         fetchCategory()
     }
     
+    private func fetchCategory() {
+        Task {
+            if let actual = try? await categories.get(by: categoryId), actual != category {
+                category = actual
+                onFetch?(actual)
+            }
+        }
+    }
+    
     func closeTapped() { onClose?() }
+    
     func saveTapped() {
         Task {
             do {
@@ -45,19 +52,9 @@ final class EditCategoryViewModel {
                     currency: draft.currency)
                 
                 try await categories.update(model)
-                print("SAVED MODEL: ", model)
                 await MainActor.run { onSaved?() }
             } catch {
                 print("saveTapped error:", error)
-            }
-        }
-    }
-    
-    private func fetchCategory() {
-        Task {
-            if let actual = try? await categories.get(by: categoryId), actual != category {
-                category = actual
-                onFetch?(actual)
             }
         }
     }

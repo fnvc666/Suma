@@ -1,42 +1,42 @@
 //
-//  CurrencyPickerView.swift
+//  PaymentPickerView.swift
 //  Suma
 //
-//  Created by Pavel Pavel on 17/09/2025.
+//  Created by Pavel Pavel on 28/09/2025.
 //
 import UIKit
 
-final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSource {
+final class PaymentPickerView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let button = UIButton()
     private let tableView = UITableView()
     private var isExpanded = false
     private var tableHeight: NSLayoutConstraint!
     
-    private let currencies = [("USD", "usdFlagIcon"), ("EUR", "eurFlagIcon"), ("PLN", "plnFlagIcon")]
-    private(set) var selectedCode: String = "USD"
+    private let methods = [("Card", "creditcard"), ("Cash", "dollarsign")]
+    private var selectedMethod = "Card"
     
-    var onCurrencySelected: ((String) -> Void)?
+    var onMethodSelected: ((String) -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        
-        tableView.layer.cornerRadius = 6
-        tableView.layer.masksToBounds = true
     }
     
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setupUI() {
         var config = UIButton.Configuration.plain()
         config.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-        config.attributedTitle = AttributedString("\(selectedCode) ▾", attributes: AttributeContainer([
+        config.attributedTitle = AttributedString("By \(selectedMethod.lowercased()) ▾", attributes: AttributeContainer([
             .font: UIFont(name: "Geist-Medium", size: 14)!,
             .foregroundColor: UIColor.white
         ]))
-        let image = UIImage(named: "usdFlagIcon")?.resized(to: CGSize(width: 20, height: 20))
+        let image = UIImage(systemName: "creditcard")?.scaled(to: 0.85)?.withRenderingMode(.alwaysTemplate)
         config.image = image
+        config.baseForegroundColor = .white
         config.imagePadding = 8
         
         button.configuration = config
@@ -72,7 +72,7 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     @objc private func toggle() {
         isExpanded.toggle()
         if isExpanded { tableView.isHidden = false }
-        let rows = currencies.count
+        let rows = methods.count
         let target = isExpanded ? CGFloat(rows * 44) : 0
         
         UIView.animate(withDuration: 0.25) {
@@ -81,21 +81,21 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        currencies.count
+        methods.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = CustomTableCell(style: .default, currency: currencies[indexPath.row].0)
+        let cell = CustomPaymentTableCell(style: .default, method: methods[indexPath.row].0, iconName: methods[indexPath.row].1)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let (currency, icon) = currencies[indexPath.row]
-        selectedCode = currency
-        button.configuration = makeButtonConfig(title: "\(currency) ▾", imageName: icon)
+        let (method, icon) = methods[indexPath.row]
+        selectedMethod = method
+        button.configuration = makeButtonConfig(title: "By \(method.lowercased()) ▾", imageName: icon)
         toggle()
         
-        onCurrencySelected?(currency)
+        onMethodSelected?(method)
     }
     
     // MARK: - Helpers
@@ -109,8 +109,9 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
             .foregroundColor: UIColor.white
         ]))
         
-        let image = UIImage(named: imageName)?.resized(to: CGSize(width: 20, height: 20))
+        let image = UIImage(systemName: imageName)?.scaled(to: 0.85)?.withRenderingMode(.alwaysTemplate)
         config.image = image
+        config.baseForegroundColor = .white
         config.imagePlacement = .leading
         config.imagePadding = 8
         
@@ -118,21 +119,24 @@ final class CurrencyPickerView: UIView, UITableViewDelegate, UITableViewDataSour
     }
     
     func setCurrency(_ code: String) {
-            guard let index = currencies.firstIndex(where: { $0.0 == code }) else { return }
-            selectedCode = code
+        guard let index = methods.firstIndex(where: { $0.0 == code }) else { return }
+        selectedMethod = code
         
-            let pair = currencies[index]
-            button.configuration = makeButtonConfig(title: "\(pair.0) ▾", imageName: pair.1)
-
-            tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
-        }
-
+        let pair = methods[index]
+        button.configuration = makeButtonConfig(title: "\(pair.0) ▾", imageName: pair.1)
+        
+        tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
+    }
 }
 
 extension UIImage {
-    func resized(to size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            self.draw(in: CGRect(origin: .zero, size: size))
+    func scaled(to scale: CGFloat) -> UIImage? {
+        let newSize = CGSize(width: size.width * scale,
+                             height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }
+

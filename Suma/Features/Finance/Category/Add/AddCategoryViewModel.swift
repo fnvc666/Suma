@@ -14,7 +14,6 @@ final class AddCategoryViewModel {
     private(set) var currency: String = "USD"
     private var selectedGradient = "GreenGradient"
     
-    // Form Section
     var onNameChanged: ((String) -> Void)?
     var onAmountChanged: ((Double) -> Void)?
     var onCurrencyChanged: ((String) -> Void)?
@@ -55,10 +54,6 @@ final class AddCategoryViewModel {
     func setCurrency(_ newCurrency: String) {
         currency = newCurrency
         onCurrencyChanged?(newCurrency)
-    }
-    
-    // Inputs <- View
-    func viewDidLoad() {
     }
     
     func closeTapped() { onClose?() }

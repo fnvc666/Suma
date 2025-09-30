@@ -97,4 +97,8 @@ final class FolderView: UIView {
     func setAmount(_ amount: String) {
         self.amountLabel.text = "\(amount)$"
     }
+    
+    func setNumber(_ number: String) {
+        self.number.text = number
+    }
 }

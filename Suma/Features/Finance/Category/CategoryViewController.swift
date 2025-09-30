@@ -9,11 +9,15 @@ import UIKit
 
 final class CategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: CategoryViewModel
-    private let navBar = MultiCustomNavBar(frame: .zero, barTitle: "Food")
+    private let navBar = MultiCustomNavBar(frame: .zero, barTitle: "Categories")
     
     private let background = GradientBackgroundView(style: .screen)
     private let scroll = UIScrollView()
     private var stack = UIStackView()
+    
+    private let totalAmount = TotalAmountView()
+    private let spentThisMonth = SpentThisMonthView()
+    private let actionsView = ActionsView()
     
     init(viewModel: CategoryViewModel) {
         self.vm = viewModel
@@ -24,13 +28,11 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.viewDidLoad()
         layout()
         buildComponents()
-        
-        navBar.onBack = { [weak vm] in vm?.closeTapped() }
-        navBar.onEdit = { [weak vm] in vm?.editTapped() }
-        navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
+        setupCallbacks()
+        rednerComponents()
+        vm.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,7 +81,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             $0.removeFromSuperview()
         }
         
-        [navBar].forEach {
+        [navBar, totalAmount, spentThisMonth, actionsView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -87,6 +89,35 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         NSLayoutConstraint.activate([
             navBar.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             navBar.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            totalAmount.leadingAnchor.constraint(equalTo: stack.leadingAnchor),
+            totalAmount.trailingAnchor.constraint(equalTo: stack.trailingAnchor),
+            
+            spentThisMonth.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            spentThisMonth.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            
+            actionsView.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
+            actionsView.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
         ])
+        
+        stack.setCustomSpacing(32, after: navBar)
+        stack.setCustomSpacing(36, after: totalAmount)
+        stack.setCustomSpacing(24, after: spentThisMonth)
+    }
+    
+    private func setupCallbacks() {
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+        navBar.onEdit = { [weak vm] in vm?.editTapped() }
+        navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
+        actionsView.onAddTransaction = { [weak vm] in vm?.addTransactionTapped() }
+    }
+    
+    private func rednerComponents() {
+        vm.onFetch = { [weak self] category in
+            self?.navBar.setBatTitle(category.name)
+            self?.totalAmount.render(category.current, category.currency)
+            self?.spentThisMonth.render(category.current, category.budget, category.currency, category.gradient)
+            print(category)
+        }
     }
 }

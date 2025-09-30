@@ -8,9 +8,11 @@ import Foundation
 
 struct Transaction: Identifiable, Equatable {
     let id: UUID
-    var amount: Money
+    var amount: Double
     var date: Date
-    var note: String?
-    var isExpense: Bool
-    var categoryId: UUID?
+    var location: String
+    var isSpent: Bool
+    var paymentMethod: String
+    var currency: String
+    var categoryId: UUID
 }

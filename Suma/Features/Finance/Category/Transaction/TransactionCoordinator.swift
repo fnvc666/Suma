@@ -29,8 +29,11 @@ final class TransactionCoordinator: Coordinator {
             transactions: transactions,
             categoryId: categoryId)
         let vc = AddTransactionViewController(viewModel: vm)
-        vm.onClose = { [weak self] in self?.close() }
-        vm.onSaved = { [weak self] in self?.close() }
+        vm.onClose = { [weak self] in
+            self?.nav.popViewController(animated: true)
+            self?.onFinish?()
+        }
+        vm.onAdded = { [weak self] in self?.close() }
         nav.pushViewController(vc, animated: true)
     }
     

@@ -71,5 +71,6 @@ final class FormSection: UIView {
         f.maximumFractionDigits = 2
         f.decimalSeparator = "."
         customAmountField.name = (f.string(from: category.budget as NSNumber) ?? "")
+        currencySection.setCurrency(category.currency)
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
+final class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate {
     private let vm: EditCategoryViewModel
     private let navBar = CustomNavBar(frame: .zero, barTitle: "Edit Category")
     
@@ -42,39 +42,9 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
         super.viewDidLoad()
         layout()
         buildComponents()
-        
-        form.fill(from: vm.draft)
-        gradients.select(name: vm.draft.gradient)
-        folder.setGradient(vm.draft.gradient)
-        
-        form.onNameChanged = { [weak self] text in
-            self?.vm.setName(text)
-            self?.folder.setName(text)
-        }
-        form.onAmountChanged = { [weak self] text in
-            self?.vm.setBudgetString(text)
-            self?.folder.setAmount(text)
-        }
-        
-        gradients.onSelect = { [weak self, weak vm] color in
-            self?.vm.setGradient(color)
-            self?.folder.setGradient(color)
-        }
-        
-        saveButton.onSaveClicked = { [weak self] in
-            self?.vm.saveTapped()
-        }
-        navBar.onBack = { [weak vm] in vm?.closeTapped() }
-        
+        setupCallbacks()
+        populateData()
         vm.viewDidLoad()
-//
-//        form.onCurrencyChanged = { [weak self] currency in
-//            self?.vm.setCurrency(currency)
-//        }
-//        
-//        addButton.onAddClicked = { [weak self] in
-//            self?.vm.addTapped()
-//        }
     }
     
     private func layout() {
@@ -155,5 +125,39 @@ class EditCategoryViewController: UIViewController, UIGestureRecognizerDelegate 
         
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(25, after: headerHStack)
+    }
+    
+    private func setupCallbacks() {
+        form.onNameChanged = { [weak self] text in
+            self?.vm.setName(text)
+            self?.folder.setName(text)
+        }
+        
+        form.onAmountChanged = { [weak self] text in
+            self?.vm.setBudgetString(text)
+            self?.folder.setAmount(text)
+        }
+        
+        form.onCurrencyChanged = { [weak self] text in
+            self?.vm.setCurrency(text)
+            self?.form.currencySection.picker.setCurrency(text)
+        }
+        
+        gradients.onSelect = { [weak self] color in
+            self?.vm.setGradient(color)
+            self?.folder.setGradient(color)
+        }
+        
+        saveButton.onSaveClicked = { [weak self] in
+            self?.vm.saveTapped()
+        }
+        
+        navBar.onBack = { [weak vm] in vm?.closeTapped() }
+    }
+    
+    private func populateData() {
+        form.fill(from: vm.draft)
+        gradients.select(name: vm.draft.gradient)
+        folder.setGradient(vm.draft.gradient)
     }
 }
