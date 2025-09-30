@@ -15,7 +15,7 @@ final class TransactionAmountView: UIView {
         setupUI()
     }
     
-    var onAmountChanged: ((Decimal?) -> Void)?
+    var onAmountChanged: ((Double?) -> Void)?
     
     required init?(coder: NSCoder) {fatalError()}
     
@@ -49,7 +49,7 @@ final class TransactionAmountView: UIView {
     
     @objc private func editingChanged() {
         let raw = amountTextField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
-        onAmountChanged?(Decimal(string: raw))
+        onAmountChanged?(Double(raw))
     }
 }
 

@@ -10,7 +10,6 @@ import CoreData
 final class CategoriesRepositoryCoreData: CategoriesRepositoryProtocol {
     
     private let container: NSPersistentContainer
-    private var items: [Category] = []
     
     init(container: NSPersistentContainer) {
         self.container = container

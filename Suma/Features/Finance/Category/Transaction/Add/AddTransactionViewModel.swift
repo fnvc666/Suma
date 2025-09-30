@@ -11,7 +11,7 @@ final class AddTransactionViewModel {
     private let categoryId: UUID
     
     private var transactionType = "Spent"
-    private var amount: Decimal = 0
+    private var amount: Double = 0
     private var location = ""
     private var currency = "USD"
     private var paymentMethod = "Card"
@@ -25,14 +25,33 @@ final class AddTransactionViewModel {
     var onAdded: (() -> Void)?
     
     func closeTapped() { onClose?() }
+    
     func addTapped() {
-        onAdded?()
+        Task {
+            do {
+                let model = Transaction(
+                    id: UUID(),
+                    amount: amount,
+                    date: Date(),
+                    location: location,
+                    isSpent: transactionType == "Spent",
+                    paymentMethod: paymentMethod,
+                    currency: currency,
+                    categoryId: categoryId)
+                
+                try await transactions.add(model)
+                await MainActor.run { onAdded?() }
+            
+            } catch {
+                print("addTapped error:", error)
+            }
+        }
     }
     
     func setType(_ type: String) {
         self.transactionType = type
     }
-    func setAmount(_ amount: Decimal) {
+    func setAmount(_ amount: Double) {
         self.amount = amount
     }
     
