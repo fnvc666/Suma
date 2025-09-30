@@ -51,5 +51,7 @@ final class TransactionAmountView: UIView {
         let raw = amountTextField.text?.replacingOccurrences(of: ",", with: ".") ?? ""
         onAmountChanged?(Double(raw))
     }
+    
+    func setAmount(_ amount: Double) { self.amountTextField.text = "\(amount)" }
 }
 

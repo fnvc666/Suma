@@ -31,4 +31,21 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
         }
     }
     
+    func update(_ tx: Transaction) async throws {
+        try await container.performBackgroundTask { ctx in
+            ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            ctx.undoManager = nil
+            
+            let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", tx.id as CVarArg)
+            req.fetchLimit = 1
+            
+            guard let obj = try ctx.fetch(req).first else {
+                throw NSError(domain: "CategoriesRepository", code: 404)
+            }
+            obj.fill(from: tx)
+            
+            if ctx.hasChanges { try ctx.save() }
+        }
+    }
 }

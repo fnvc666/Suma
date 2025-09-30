@@ -59,6 +59,11 @@ final class TransactionTypeView: UIView {
             if $0.isSelected { onSetTransactionType?($0.title.text ?? "") }
         }
     }
+    
+    func setType(_ type: String) {
+        spentButton.isSelected = (type == "Spent")
+        receivedButton.isSelected = !spentButton.isSelected
+    }
 }
 
 final class TransactionTypeButton: UIButton {

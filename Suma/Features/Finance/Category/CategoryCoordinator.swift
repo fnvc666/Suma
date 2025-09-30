@@ -50,8 +50,8 @@ final class CategoryCoordinator: Coordinator {
             self?.startAddTransaction()
         }
         
-        vm.onEditTransaction = { [weak self] txId in
-            self?.startEditTransaction(id: txId)
+        vm.onEditTransaction = { [weak self] txId, snap in
+            self?.startEditTransaction(id: txId, snap: snap)
         }
         
         nav.pushViewController(vc, animated: true)
@@ -85,7 +85,7 @@ final class CategoryCoordinator: Coordinator {
         flow.startAdd()
     }
     
-    private func startEditTransaction(id: UUID) {
+    private func startEditTransaction(id: UUID, snap: Transaction) {
         let flow = TransactionCoordinator(
             transactions: container.transactionRepo,
             nav: nav,
@@ -95,6 +95,6 @@ final class CategoryCoordinator: Coordinator {
             guard let self, let flow else { return }
             self.children.removeAll { $0 === flow }
         }
-        flow.startEdit(transactionId: id)
+        flow.startEdit(transactionId: id, snapshot: snap)
     }
 }

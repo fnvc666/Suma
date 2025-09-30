@@ -118,7 +118,7 @@ final class PaymentPickerView: UIView, UITableViewDelegate, UITableViewDataSourc
         return config
     }
     
-    func setCurrency(_ code: String) {
+    func setMethod(_ code: String) {
         guard let index = methods.firstIndex(where: { $0.0 == code }) else { return }
         selectedMethod = code
         

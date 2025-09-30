@@ -45,7 +45,7 @@ final class PaymentSectionView: UIView {
         ])
     }
     
-    func setCurrency(_ code: String) {
-            picker.setCurrency(code)
-        }
+    func setMethod(_ code: String) {
+        picker.setMethod(code)
+    }
 }

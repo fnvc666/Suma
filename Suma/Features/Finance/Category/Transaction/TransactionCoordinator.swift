@@ -37,10 +37,10 @@ final class TransactionCoordinator: Coordinator {
         nav.pushViewController(vc, animated: true)
     }
     
-    func startEdit(transactionId: UUID) {
+    func startEdit(transactionId: UUID, snapshot: Transaction) {
         let vm = EditTransactionViewModel(
             transaction: transactions,
-            transactionId: transactionId)
+            transactionId: transactionId, initial: snapshot)
         let vc = EditTransactionViewController(viewModel: vm)
         vm.onClose = { [weak self] in self?.close() }
         vm.onSaved = { [weak self] in self?.close() }
