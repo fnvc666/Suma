@@ -18,6 +18,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     private let totalAmount = TotalAmountView()
     private let spentThisMonth = SpentThisMonthView()
     private let actionsView = ActionsView()
+    private let transactionList = TransactionListView()
     
     init(viewModel: CategoryViewModel) {
         self.vm = viewModel
@@ -46,7 +47,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         view.addSubview(scroll)
         
         stack.axis = .vertical
-        stack.alignment = .leading
+        stack.alignment = .fill
         stack.isLayoutMarginsRelativeArrangement = true
         stack.directionalLayoutMargins = .init(top: 25, leading: 20, bottom: 20, trailing: 20)
         scroll.addSubview(stack)
@@ -81,28 +82,15 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
             $0.removeFromSuperview()
         }
         
-        [navBar, totalAmount, spentThisMonth, actionsView].forEach {
+        [navBar, totalAmount, spentThisMonth, actionsView, transactionList].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
-        
-        NSLayoutConstraint.activate([
-            navBar.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
-            navBar.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
-            
-            totalAmount.leadingAnchor.constraint(equalTo: stack.leadingAnchor),
-            totalAmount.trailingAnchor.constraint(equalTo: stack.trailingAnchor),
-            
-            spentThisMonth.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
-            spentThisMonth.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
-            
-            actionsView.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
-            actionsView.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
-        ])
-        
+
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(36, after: totalAmount)
         stack.setCustomSpacing(24, after: spentThisMonth)
+        stack.setCustomSpacing(24, after: actionsView)
     }
     
     private func setupCallbacks() {
@@ -113,11 +101,11 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
     }
     
     private func rednerComponents() {
-        vm.onFetch = { [weak self] category in
+        vm.onFetch = { [weak self] category, trans in
             self?.navBar.setBatTitle(category.name)
             self?.totalAmount.render(category.current, category.currency)
             self?.spentThisMonth.render(category.current, category.budget, category.currency, category.gradient)
-            print(category)
+            self?.transactionList.reload(with: trans)
         }
     }
 }

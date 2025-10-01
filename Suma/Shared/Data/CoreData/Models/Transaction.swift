@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Transaction: Identifiable, Equatable {
+struct Transaction: Hashable, Identifiable, Equatable {
     let id: UUID
     var amount: Double
     var date: Date

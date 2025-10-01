@@ -11,10 +11,11 @@ final class CategoryViewModel {
     private let categories: CategoriesRepositoryProtocol
     private let transactions: TransactionsRepositoryProtocol
     private(set) var category: Category
+    private(set) var transactionsList: [Transaction]
     
     var fetchTransactions: [Transaction] = []
     
-    var onFetch: ((Category) -> Void)?
+    var onFetch: ((Category, [Transaction]) -> Void)?
     var onClose: (() -> Void)?
     var onDelete: (() -> Void)?
     var onEditCategory: (() -> Void)?
@@ -27,15 +28,31 @@ final class CategoryViewModel {
         self.categories = categories
         self.transactions = transactions
         self.category = initial ?? Category(id: categoryId, number: "", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD")
+        self.transactionsList = []
     }
     
     func viewDidLoad() {
-        Task { @MainActor in onFetch?(category) }
+        Task { @MainActor in onFetch?(category, transactionsList)
+            print("CATEGORY1: \(category)")
+            print("TRANS1: \(transactionsList)")
+        }
         
         Task {
-            if let actual = try? await categories.get(by: categoryId), actual != category {
-                category = actual
-                await MainActor.run { onFetch?(actual) }
+            do {
+                let actual = try await categories.get(by: categoryId)
+                let trans  = try await transactions.listAll(categoryId)
+                
+                await MainActor.run {
+                    self.category = actual
+                    self.transactionsList = trans
+                    self.fetchTransactions = trans
+                    
+                    self.onFetch?(actual, trans)
+                    print("CATEGORY (fresh): \(actual)")
+                    print("TRANS (fresh): \(trans)")
+                }
+            } catch {
+                print("Fetch error: \(error)")
             }
         }
     }

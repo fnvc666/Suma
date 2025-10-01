@@ -7,7 +7,7 @@
 import Foundation
 
 protocol TransactionsRepositoryProtocol {
-    func listAll() async throws -> [Transaction]
+    func listAll(_ categoryId: UUID) async throws -> [Transaction]
     func add(_ tx: Transaction) async throws
     func update(_ tx: Transaction) async throws
 }

@@ -15,9 +15,10 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
         self.container = container
     }
     
-    func listAll() async throws -> [Transaction] {
+    func listAll(_ categoryId: UUID) async throws -> [Transaction] {
         try await container.viewContext.perform {
             let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "categoryId == %@", categoryId as CVarArg)
             let rows = try self.container.viewContext.fetch(req)
             return rows.map { $0.toDomain() }
         }
