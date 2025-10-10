@@ -98,6 +98,7 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         navBar.onEdit = { [weak vm] in vm?.editTapped() }
         navBar.onDelete = { [weak vm] in vm?.deleteTapped() }
         actionsView.onAddTransaction = { [weak vm] in vm?.addTransactionTapped() }
+        transactionList.onSelect = { [weak vm] id in vm?.editTransactionTapped(id: id)}
     }
     
     private func rednerComponents() {

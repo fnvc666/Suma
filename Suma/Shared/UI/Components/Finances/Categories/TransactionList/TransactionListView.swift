@@ -8,6 +8,8 @@ import UIKit
 
 final class TransactionListView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    var onSelect: ((UUID) -> Void)?
+    
     private var items: [Transaction] = [] {
         didSet {
             collectionView.reloadData()
@@ -76,6 +78,10 @@ final class TransactionListView: UIView, UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 72)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        onSelect?(items[indexPath.row].id)
     }
     
     // MARK: - Public Methods

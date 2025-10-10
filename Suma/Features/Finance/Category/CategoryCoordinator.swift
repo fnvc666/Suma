@@ -16,12 +16,28 @@ final class CategoryCoordinator: Coordinator {
     private let nav: UINavigationController
     private let categoryId: UUID
     private let snapshot: Category?
+    private let transactionFlow: TransactionCoordinator
+    
+    private var categoryVM: CategoryViewModel?
     
     init(container: AppContainer, nav: UINavigationController, categoryId: UUID, snapshot: Category?) {
         self.container = container
         self.nav = nav
         self.categoryId = categoryId
         self.snapshot = snapshot
+        
+        let flow = TransactionCoordinator(
+            transactions: container.transactionRepo,
+            nav: nav,
+            categoryId: categoryId
+        )
+        self.transactionFlow = flow
+        
+        children.append(flow)
+        flow.onFinish = { [weak self, weak flow] in
+            guard let self, let flow else { return }
+            self.children.removeAll { $0 === flow }
+        }
     }
     
     func start() {
@@ -29,8 +45,21 @@ final class CategoryCoordinator: Coordinator {
             categoryId: categoryId,
             categories: container.categoriesRepo,
             transactions: container.transactionRepo, initial: snapshot
-            )
+        )
+        self.categoryVM = vm
         let vc = CategoryViewController(viewModel: vm)
+        
+        let transactionFlow = TransactionCoordinator(
+            transactions: container.transactionRepo,
+            nav: nav,
+            categoryId: categoryId)
+        
+        children.append(transactionFlow)
+        
+        transactionFlow.onFinish = { [weak self, weak transactionFlow] in
+            guard let self, let transactionFlow else { return }
+            self.children.removeAll { $0 === transactionFlow }
+        }
         
         vm.onClose = { [weak self] in
             self?.nav.popViewController(animated: true)
@@ -73,28 +102,13 @@ final class CategoryCoordinator: Coordinator {
     }
     
     private func startAddTransaction() {
-        let flow = TransactionCoordinator(
-            transactions: container.transactionRepo,
-            nav: nav,
-            categoryId: categoryId)
-        children.append(flow)
-        flow.onFinish = { [weak self, weak flow] in
-            guard let self, let flow else { return }
-            self.children.removeAll { $0 === flow }
-        }
-        flow.startAdd()
+        transactionFlow.startAdd()
     }
     
     private func startEditTransaction(id: UUID, snap: Transaction) {
-        let flow = TransactionCoordinator(
-            transactions: container.transactionRepo,
-            nav: nav,
-            categoryId: categoryId)
-        children.append(flow)
-        flow.onFinish = { [weak self, weak flow] in
-            guard let self, let flow else { return }
-            self.children.removeAll { $0 === flow }
+        transactionFlow.startEdit(transactionId: id, snapshot: snap)
+        transactionFlow.onReload = { [weak self] in
+            self?.categoryVM?.reload()
         }
-        flow.startEdit(transactionId: id, snapshot: snap)
     }
 }

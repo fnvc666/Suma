@@ -34,6 +34,7 @@ class EditTransactionViewController: UIViewController {
         layout()
         buildComponents()
         setupCallbacks()
+        populateData()
     }
     
     private func layout() {
@@ -120,7 +121,8 @@ class EditTransactionViewController: UIViewController {
     }
     
     private func populateData() {
-        transactionType.setType(vm.draft.paymentMethod)
+        print(vm.draft)
+        transactionType.setType(vm.draft.isSpent)
         amountView.setAmount(vm.draft.amount)
         formSection.fill(vm.draft.location, vm.draft.paymentMethod, currency: vm.draft.currency)
     }

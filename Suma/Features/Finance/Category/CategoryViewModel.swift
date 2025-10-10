@@ -32,10 +32,7 @@ final class CategoryViewModel {
     }
     
     func viewDidLoad() {
-        Task { @MainActor in onFetch?(category, transactionsList)
-            print("CATEGORY1: \(category)")
-            print("TRANS1: \(transactionsList)")
-        }
+        Task { @MainActor in onFetch?(category, transactionsList) }
         
         Task {
             do {
@@ -48,8 +45,6 @@ final class CategoryViewModel {
                     self.fetchTransactions = trans
                     
                     self.onFetch?(actual, trans)
-                    print("CATEGORY (fresh): \(actual)")
-                    print("TRANS (fresh): \(trans)")
                 }
             } catch {
                 print("Fetch error: \(error)")
@@ -75,4 +70,16 @@ final class CategoryViewModel {
         }
     }
     func addTransactionTapped() { onAddTransaction?() }
+    
+    func reload() { Task { await load() } }
+    
+    func load() async {
+        do {
+            let transactions = try await self.transactions.listAll(categoryId)
+            self.fetchTransactions = transactions
+            await MainActor.run{ onFetch?(category, transactions) }
+        } catch {
+            print("Error during fetching data: \(error)")
+        }
+    }
 }

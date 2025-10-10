@@ -27,7 +27,7 @@ final class EditTransactionViewModel {
         Task {
             do {
                 let model = Transaction(
-                    id: UUID(),
+                    id: transactionId,
                     amount: draft.amount,
                     date: draft.date,
                     location: draft.location,
@@ -40,7 +40,7 @@ final class EditTransactionViewModel {
                 await MainActor.run { onSaved?() }
             
             } catch {
-                print("addTapped error:", error)
+                print("saveTapped error:", error)
             }
         }
     }

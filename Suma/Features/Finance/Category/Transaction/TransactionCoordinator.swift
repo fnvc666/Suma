@@ -9,6 +9,7 @@ import UIKit
 final class TransactionCoordinator: Coordinator {
     var children: [Coordinator] = []
     var onFinish: (() -> Void)?
+    var onReload: (() -> Void)?
     
     private let transactions: TransactionsRepositoryProtocol
     private let nav: UINavigationController
@@ -49,6 +50,7 @@ final class TransactionCoordinator: Coordinator {
     
     private func close() {
         nav.popViewController(animated: true)
+        onReload?()
         onFinish?()
     }
 }
