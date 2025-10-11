@@ -105,8 +105,13 @@ final class CategoryViewController: UIViewController, UIGestureRecognizerDelegat
         vm.onFetch = { [weak self] category, trans in
             self?.navBar.setBatTitle(category.name)
             self?.totalAmount.render(category.current, category.currency)
-            self?.spentThisMonth.render(category.current, category.budget, category.currency, category.gradient)
             self?.transactionList.reload(with: trans)
+            
+            let sum = trans.reduce(0) { partialResult, tx in
+                partialResult + (tx.currency == category.currency ? tx.amount : 0)
+            }
+            self?.spentThisMonth.render(sum, category.budget, category.currency, category.gradient)
+            self?.totalAmount.render(sum, category.currency)
         }
     }
 }
