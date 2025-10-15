@@ -19,6 +19,7 @@ class EditTransactionViewController: UIViewController {
     private let amountView = TransactionAmountView()
     private let formSection = TransactionFormSectionView()
     private let saveTransactionButton = YellowButton(frame: .zero, title: "Save changes")
+    private let deleteTransactionButton = DeleteButton(frame: .zero, title: "Delete transaction")
     
     init(viewModel: EditTransactionViewModel) {
         self.vm = viewModel
@@ -42,7 +43,7 @@ class EditTransactionViewController: UIViewController {
         view.addSubview(scroll)
         
         stack.axis = .vertical
-        stack.alignment = .leading
+        stack.alignment = .center
         stack.isLayoutMarginsRelativeArrangement = true
         stack.directionalLayoutMargins = .init(top: 25, leading: 20, bottom: 20, trailing: 20)
         scroll.addSubview(stack)
@@ -78,7 +79,9 @@ class EditTransactionViewController: UIViewController {
             $0.removeFromSuperview()
         }
         
-        [navBar, transactionType, amountView, formSection, saveTransactionButton].forEach {
+        deleteTransactionButton.addTarget(self, action: #selector(deleteTransaction), for: .touchUpInside)
+        
+        [navBar, transactionType, amountView, formSection, saveTransactionButton, deleteTransactionButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview($0)
         }
@@ -98,13 +101,17 @@ class EditTransactionViewController: UIViewController {
             
             saveTransactionButton.leadingAnchor.constraint(equalTo: stack.layoutMarginsGuide.leadingAnchor),
             saveTransactionButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
-            saveTransactionButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor),
+            
+            deleteTransactionButton.widthAnchor.constraint(lessThanOrEqualTo: stack.widthAnchor, multiplier: 0.45),
+            deleteTransactionButton.trailingAnchor.constraint(equalTo: stack.layoutMarginsGuide.trailingAnchor),
+            deleteTransactionButton.bottomAnchor.constraint(equalTo: stack.layoutMarginsGuide.bottomAnchor)
         ])
         
         stack.setCustomSpacing(32, after: navBar)
         stack.setCustomSpacing(24, after: transactionType)
         stack.setCustomSpacing(24, after: amountView)
         stack.setCustomSpacing(24, after: formSection)
+        stack.setCustomSpacing(16, after: saveTransactionButton)
     }
     
     private func setupCallbacks() {
@@ -121,9 +128,12 @@ class EditTransactionViewController: UIViewController {
     }
     
     private func populateData() {
-        print(vm.draft)
         transactionType.setType(vm.draft.isSpent)
         amountView.setAmount(vm.draft.amount)
         formSection.fill(vm.draft.location, vm.draft.paymentMethod, currency: vm.draft.currency)
+    }
+    
+    @objc private func deleteTransaction() {
+        vm.deleteTapped()
     }
 }

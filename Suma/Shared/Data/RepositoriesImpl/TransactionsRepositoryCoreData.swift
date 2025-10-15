@@ -49,4 +49,22 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
             if ctx.hasChanges { try ctx.save() }
         }
     }
+    
+    func delete(_ id: UUID) async throws {
+        try await container.performBackgroundTask { ctx in
+            ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            ctx.undoManager = nil
+            
+            let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            req.fetchLimit = 1
+            
+            guard let obj = try ctx.fetch(req).first else {
+                throw NSError(domain: "TransactionsRepository", code: 404, userInfo: [NSLocalizedDescriptionKey: "Transaction not found"])
+            }
+            
+            ctx.delete(obj)
+            if ctx.hasChanges { try ctx.save() }
+        }
+    }
 }

@@ -17,9 +17,7 @@ final class EditTransactionViewModel {
         self.draft = initial
     }
     
-    // Outside navigation
     var onClose: (() -> Void)?
-    var onSaved: (() -> Void)?
     
     func closeTapped() { onClose?() }
     
@@ -37,10 +35,21 @@ final class EditTransactionViewModel {
                     categoryId: draft.categoryId)
                 
                 try await transactions.update(model)
-                await MainActor.run { onSaved?() }
+                await MainActor.run { onClose?() }
             
             } catch {
                 print("saveTapped error:", error)
+            }
+        }
+    }
+    
+    func deleteTapped() {
+        Task {
+            do {
+                try await transactions.delete(transactionId)
+                await MainActor.run { onClose?() }
+            } catch {
+                print("deleteTapped error:", error)
             }
         }
     }

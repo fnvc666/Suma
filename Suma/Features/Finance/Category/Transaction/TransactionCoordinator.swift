@@ -44,7 +44,6 @@ final class TransactionCoordinator: Coordinator {
             transactionId: transactionId, initial: snapshot)
         let vc = EditTransactionViewController(viewModel: vm)
         vm.onClose = { [weak self] in self?.close() }
-        vm.onSaved = { [weak self] in self?.close() }
         nav.pushViewController(vc, animated: true)
     }
     
