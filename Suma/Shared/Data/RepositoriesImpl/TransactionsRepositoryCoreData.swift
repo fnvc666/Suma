@@ -15,9 +15,10 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
         self.container = container
     }
     
-    func listAll() async throws -> [Transaction] {
+    func listAll(_ categoryId: UUID) async throws -> [Transaction] {
         try await container.viewContext.perform {
             let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "categoryId == %@", categoryId as CVarArg)
             let rows = try self.container.viewContext.fetch(req)
             return rows.map { $0.toDomain() }
         }
@@ -31,4 +32,39 @@ final class TransactionsRepositoryCoreData: TransactionsRepositoryProtocol {
         }
     }
     
+    func update(_ tx: Transaction) async throws {
+        try await container.performBackgroundTask { ctx in
+            ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            ctx.undoManager = nil
+            
+            let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", tx.id as CVarArg)
+            req.fetchLimit = 1
+            
+            guard let obj = try ctx.fetch(req).first else {
+                throw NSError(domain: "CategoriesRepository", code: 404)
+            }
+            obj.fill(from: tx)
+            
+            if ctx.hasChanges { try ctx.save() }
+        }
+    }
+    
+    func delete(_ id: UUID) async throws {
+        try await container.performBackgroundTask { ctx in
+            ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            ctx.undoManager = nil
+            
+            let req: NSFetchRequest<TransactionEntity> = TransactionEntity.fetchRequest()
+            req.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            req.fetchLimit = 1
+            
+            guard let obj = try ctx.fetch(req).first else {
+                throw NSError(domain: "TransactionsRepository", code: 404, userInfo: [NSLocalizedDescriptionKey: "Transaction not found"])
+            }
+            
+            ctx.delete(obj)
+            if ctx.hasChanges { try ctx.save() }
+        }
+    }
 }

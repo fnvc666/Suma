@@ -9,6 +9,7 @@ import UIKit
 final class TransactionCoordinator: Coordinator {
     var children: [Coordinator] = []
     var onFinish: (() -> Void)?
+    var onReload: (() -> Void)?
     
     private let transactions: TransactionsRepositoryProtocol
     private let nav: UINavigationController
@@ -37,18 +38,18 @@ final class TransactionCoordinator: Coordinator {
         nav.pushViewController(vc, animated: true)
     }
     
-    func startEdit(transactionId: UUID) {
+    func startEdit(transactionId: UUID, snapshot: Transaction) {
         let vm = EditTransactionViewModel(
             transaction: transactions,
-            transactionId: transactionId)
+            transactionId: transactionId, initial: snapshot)
         let vc = EditTransactionViewController(viewModel: vm)
         vm.onClose = { [weak self] in self?.close() }
-        vm.onSaved = { [weak self] in self?.close() }
         nav.pushViewController(vc, animated: true)
     }
     
     private func close() {
         nav.popViewController(animated: true)
+        onReload?()
         onFinish?()
     }
 }

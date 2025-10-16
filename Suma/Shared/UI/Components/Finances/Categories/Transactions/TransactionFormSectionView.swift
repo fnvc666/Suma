@@ -62,4 +62,10 @@ final class TransactionFormSectionView: UIView {
             self?.onCurrencyChanged?(currency)
         }
     }
+    
+    func fill(_ location: String, _ method: String, currency: String) {
+        locationField.name = location
+        paymentSection.setMethod(method)
+        currencySection.setCurrency(currency)
+    }
 }

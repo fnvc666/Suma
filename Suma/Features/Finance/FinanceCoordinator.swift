@@ -33,7 +33,6 @@ final class FinanceCoordinator: Coordinator {
             self?.startCategory(categoryId: id, snapshot: snap)
         }
         
-        
     }
     
     private func startAddCategory() {

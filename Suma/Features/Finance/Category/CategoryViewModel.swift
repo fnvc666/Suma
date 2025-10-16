@@ -11,29 +11,43 @@ final class CategoryViewModel {
     private let categories: CategoriesRepositoryProtocol
     private let transactions: TransactionsRepositoryProtocol
     private(set) var category: Category
+    private(set) var transactionsList: [Transaction]
     
-    var onFetch: ((Category) -> Void)?
+    var fetchTransactions: [Transaction] = []
+    
+    var onFetch: ((Category, [Transaction]) -> Void)?
     var onClose: (() -> Void)?
     var onDelete: (() -> Void)?
     var onEditCategory: (() -> Void)?
     var onAddCategory: (() -> Void)?
     var onAddTransaction: (() -> Void)?
-    var onEditTransaction: ((UUID) -> Void)?
+    var onEditTransaction: ((UUID, Transaction) -> Void)?
     
     init(categoryId: UUID, categories: CategoriesRepositoryProtocol, transactions: TransactionsRepositoryProtocol, initial: Category?) {
         self.categoryId = categoryId
         self.categories = categories
         self.transactions = transactions
         self.category = initial ?? Category(id: categoryId, number: "", name: "", budget: 0, current: 0, gradient: "GreenGradient", currency: "USD")
+        self.transactionsList = []
     }
     
     func viewDidLoad() {
-        Task { @MainActor in onFetch?(category) }
+        Task { @MainActor in onFetch?(category, transactionsList) }
         
         Task {
-            if let actual = try? await categories.get(by: categoryId), actual != category {
-                category = actual
-                await MainActor.run { onFetch?(actual) }
+            do {
+                let actual = try await categories.get(by: categoryId)
+                let trans  = try await transactions.listAll(categoryId)
+                
+                await MainActor.run {
+                    self.category = actual
+                    self.transactionsList = trans
+                    self.fetchTransactions = trans
+                    
+                    self.onFetch?(actual, trans)
+                }
+            } catch {
+                print("Fetch error: \(error)")
             }
         }
     }
@@ -50,6 +64,22 @@ final class CategoryViewModel {
             }
         }
     }
-    func editTransactionTapped(id: UUID) { onEditTransaction?(id)}
+    func editTransactionTapped(id: UUID) {
+        if let snap = fetchTransactions.first(where: { $0.id == id }) {
+            onEditTransaction?(id, snap)
+        }
+    }
     func addTransactionTapped() { onAddTransaction?() }
+    
+    func reload() { Task { await load() } }
+    
+    func load() async {
+        do {
+            let transactions = try await self.transactions.listAll(categoryId)
+            self.fetchTransactions = transactions
+            await MainActor.run{ onFetch?(category, transactions) }
+        } catch {
+            print("Error during fetching data: \(error)")
+        }
+    }
 }

@@ -39,6 +39,7 @@ final class SpentThisMonthView: UIView {
         leftLabel.text = "\(left) USD left"
         leftLabel.textColor = UIColor(red: 0.979, green: 0.979, blue: 0.979, alpha: 1)
         leftLabel.font = UIFont(name: "Geist-Regular", size: 12)
+        spentIndicator.setProgress(0.5)
         
         [spentLabel, spacer, leftLabel].forEach { footerHstack.addArrangedSubview($0) }
         
@@ -76,6 +77,6 @@ final class SpentThisMonthView: UIView {
         spentIndicator.setProgress(spent / budget)
         // MARK: TODO
         /// discus with designer
-        //        spentIndicator.setGradientImage(UIImage(named: gradient)!)
+        spentIndicator.setGradientImage(UIImage(named: "GreenGradient")!)
     }
 }

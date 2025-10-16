@@ -52,12 +52,17 @@ final class TransactionTypeView: UIView {
         ])
     }
     
-    @objc private func typeSelected() {
-        [spentButton, receivedButton].forEach {
-            $0.isSelected.toggle()
-            $0.configureColor()
-            if $0.isSelected { onSetTransactionType?($0.title.text ?? "") }
-        }
+    @objc private func typeSelected(_ sender: UIButton) {
+        let isSpent = (sender === spentButton)
+        setType(isSpent)
+        onSetTransactionType?(isSpent ? "Spent" : "Received")
+    }
+
+    
+    func setType(_ type: Bool) {
+        spentButton.isSelected = type
+        receivedButton.isSelected = !spentButton.isSelected
+        [spentButton, receivedButton].forEach { $0.configureColor() }
     }
 }
 

@@ -41,7 +41,6 @@ final class FinanceViewModel {
     func load() async {
         do {
             let categories = try await self.categories.listAll()
-            print("CATEGORIES: \(categories)")
             self.fetchCategory = categories
             await MainActor.run{ onFetch?(categories) }
         } catch {
